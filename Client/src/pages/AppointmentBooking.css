@@ -1,0 +1,1539 @@
+/* ============================================
+   APPOINTMENT BOOKING - PROFESSIONAL THEME
+   ============================================ */
+
+/* CSS Variables */
+:root {
+    --primary-color: #2563eb;
+    --primary-dark: #1e40af;
+    --primary-light: #3b82f6;
+    --secondary-color: #10b981;
+    --danger-color: #ef4444;
+    --warning-color: #f59e0b;
+    --text-primary: #1f2937;
+    --text-secondary: #6b7280;
+    --text-light: #9ca3af;
+    --bg-primary: #ffffff;
+    --bg-secondary: #f9fafb;
+    --bg-tertiary: #f3f4f6;
+    --border-color: #e5e7eb;
+    --border-focus: #3b82f6;
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07);
+    --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+    --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.15);
+    --radius-sm: 0.375rem;
+    --radius-md: 0.5rem;
+    --radius-lg: 0.75rem;
+    --radius-xl: 1rem;
+    --transition: all 0.3s ease;
+}
+
+/* ============================================
+   GLOBAL STYLES
+   ============================================ */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.appointment-page {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+        'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* ============================================
+   HEADER
+   ============================================ */
+
+.header {
+    background: var(--bg-primary);
+    box-shadow: var(--shadow-md);
+    padding: 1rem 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    text-decoration: none;
+    transition: var(--transition);
+}
+
+.logo:hover {
+    color: var(--primary-dark);
+    transform: translateY(-2px);
+}
+
+.logo-icon {
+    font-size: 2rem;
+}
+
+/* ============================================
+   BUTTONS
+   ============================================ */
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    border: none;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: var(--transition);
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.btn-primary {
+    background: var(--primary-color);
+    color: white;
+    box-shadow: var(--shadow-sm);
+}
+
+.btn-primary:hover:not(:disabled) {
+    background: var(--primary-dark);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+}
+
+.btn-primary:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+.btn-outline {
+    background: transparent;
+    color: var(--primary-color);
+    border: 2px solid var(--primary-color);
+}
+
+.btn-outline:hover:not(:disabled) {
+    background: var(--primary-color);
+    color: white;
+}
+
+/* ============================================
+   MAIN CONTENT
+   ============================================ */
+
+.appointment-container {
+    padding: 3rem 0;
+    min-height: calc(100vh - 80px);
+}
+
+.appointment-header {
+    text-align: center;
+    margin-bottom: 3rem;
+    color: white;
+}
+
+.appointment-header h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.appointment-header p {
+    font-size: 1.125rem;
+    opacity: 0.95;
+}
+
+/* ============================================
+   PROGRESS STEPS
+   ============================================ */
+
+.progress-steps {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 800px;
+    margin: 0 auto 3rem;
+    background: white;
+    padding: 2rem;
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-lg);
+}
+
+.step-wrapper {
+    display: flex;
+    align-items: center;
+    flex: 1;
+}
+
+.step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    position: relative;
+}
+
+.step-number {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    background: var(--bg-tertiary);
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    font-weight: 700;
+    border: 3px solid var(--border-color);
+    transition: var(--transition);
+    z-index: 2;
+}
+
+.step-label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    text-align: center;
+    transition: var(--transition);
+}
+
+.step.active .step-number {
+    background: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+}
+
+.step.active .step-label {
+    color: var(--primary-color);
+}
+
+.step.completed .step-number {
+    background: var(--secondary-color);
+    color: white;
+    border-color: var(--secondary-color);
+}
+
+.step.completed .step-label {
+    color: var(--secondary-color);
+}
+
+.step-line {
+    flex: 1;
+    height: 3px;
+    background: var(--border-color);
+    margin: 0 -0.5rem;
+    position: relative;
+    top: -1.5rem;
+    z-index: 1;
+}
+
+/* ============================================
+   FORM STYLES
+   ============================================ */
+
+.appointment-form {
+    max-width: 900px;
+    margin: 0 auto;
+    background: white;
+    padding: 2.5rem;
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-xl);
+}
+
+.form-step {
+    animation: fadeIn 0.4s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.step-title {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid var(--border-color);
+}
+
+.step-title svg {
+    color: var(--primary-color);
+    font-size: 2rem;
+}
+
+.form-section {
+    margin-bottom: 2.5rem;
+}
+
+.section-subtitle {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 1.5rem;
+}
+
+.section-subtitle svg {
+    color: var(--primary-color);
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.form-group.full-width {
+    grid-column: 1 / -1;
+}
+
+.form-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.form-label.required::after {
+    content: '*';
+    color: var(--danger-color);
+    margin-left: 0.25rem;
+}
+
+.form-checkbox {
+    width: 1.125rem;
+    height: 1.125rem;
+    cursor: pointer;
+    accent-color: var(--primary-color);
+}
+
+.ml-2 {
+    margin-left: 0.5rem;
+}
+
+.form-input,
+.form-select,
+.form-textarea {
+    width: 100%;
+    padding: 0.875rem 1rem;
+    font-size: 1rem;
+    color: var(--text-primary);
+    background: var(--bg-primary);
+    border: 2px solid var(--border-color);
+    border-radius: var(--radius-md);
+    transition: var(--transition);
+    font-family: inherit;
+}
+
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus {
+    outline: none;
+    border-color: var(--border-focus);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.form-input::placeholder,
+.form-textarea::placeholder {
+    color: var(--text-light);
+}
+
+.form-input.error,
+.form-select.error,
+.form-textarea.error {
+    border-color: var(--danger-color);
+}
+
+.form-textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+.form-select {
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3E%3C/svg%3E");
+    background-position: right 0.5rem center;
+    background-repeat: no-repeat;
+    background-size: 1.5rem 1.5rem;
+    padding-right: 2.5rem;
+}
+
+.form-select:disabled {
+    background-color: var(--bg-tertiary);
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.input-with-icon {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input-with-icon .form-input,
+.input-with-icon .form-select {
+    padding-left: 3rem;
+}
+
+.input-icon {
+    position: absolute;
+    left: 1rem;
+    color: var(--text-light);
+    pointer-events: none;
+    font-size: 1.125rem;
+}
+
+.form-error {
+    font-size: 0.875rem;
+    color: var(--danger-color);
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.form-hint {
+    font-size: 0.8125rem;
+    color: var(--text-secondary);
+    font-style: italic;
+}
+
+.char-count {
+    font-size: 0.8125rem;
+    color: var(--text-light);
+    text-align: right;
+}
+
+/* Radio Buttons */
+.radio-group {
+    display: flex;
+    gap: 2rem;
+    padding: 1rem 0;
+}
+
+.radio-label {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    cursor: pointer;
+    font-weight: 500;
+    color: var(--text-primary);
+    padding: 0.75rem 1.5rem;
+    border: 2px solid var(--border-color);
+    border-radius: var(--radius-md);
+    transition: var(--transition);
+}
+
+.radio-label:hover {
+    border-color: var(--primary-light);
+    background: rgba(37, 99, 235, 0.05);
+}
+
+.radio-input {
+    width: 1.25rem;
+    height: 1.25rem;
+    cursor: pointer;
+    accent-color: var(--primary-color);
+}
+
+.radio-input:checked + span {
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+.radio-label:has(.radio-input:checked) {
+    border-color: var(--primary-color);
+    background: rgba(37, 99, 235, 0.1);
+}
+
+/* ============================================
+   FORM NAVIGATION
+   ============================================ */
+
+.form-navigation {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 2px solid var(--border-color);
+}
+
+.captcha-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.captcha-step-container {
+    text-align: center;
+    padding: 2rem 1rem;
+}
+
+.captcha-instruction {
+    font-size: 1.125rem;
+    color: var(--text-secondary);
+    margin-bottom: 2rem;
+    line-height: 1.6;
+}
+
+/* Verify Step - Inline Details */
+.verify-details {
+    margin-bottom: 1.5rem;
+}
+
+.verify-details .preview-section {
+    margin-bottom: 1.5rem;
+}
+
+.verify-details .preview-section h3 {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--border-color);
+}
+
+.verify-details .preview-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+}
+
+.verify-details .preview-grid div {
+    padding: 0.625rem 0.75rem;
+    background: var(--bg-secondary);
+    border-radius: var(--radius-md);
+    font-size: 0.9375rem;
+}
+
+.verify-details .preview-grid div.full-width {
+    grid-column: 1 / -1;
+}
+
+.verify-details .preview-grid strong {
+    display: block;
+    color: var(--text-secondary);
+    font-weight: 600;
+    margin-bottom: 0.2rem;
+    font-size: 0.8125rem;
+}
+
+/* ============================================
+   PREVIEW MODAL
+   ============================================ */
+
+.preview-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 1rem;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+.preview-modal {
+    background: white;
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-xl);
+    max-width: 900px;
+    width: 100%;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    animation: slideUp 0.4s ease-out;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.preview-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem 2rem;
+    border-bottom: 2px solid var(--border-color);
+    background: var(--bg-secondary);
+    border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+}
+
+.preview-header h2 {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 1.5rem;
+    color: var(--text-primary);
+}
+
+.preview-header h2 svg {
+    color: var(--primary-color);
+}
+
+.close-btn {
+    background: transparent;
+    border: none;
+    font-size: 1.5rem;
+    color: var(--text-secondary);
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: var(--radius-md);
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.close-btn:hover {
+    background: var(--bg-tertiary);
+    color: var(--danger-color);
+}
+
+.preview-body {
+    padding: 2rem;
+    overflow-y: auto;
+    flex: 1;
+}
+
+.preview-section {
+    margin-bottom: 2rem;
+}
+
+.preview-section:last-child {
+    margin-bottom: 0;
+}
+
+.preview-section h3 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--border-color);
+}
+
+.preview-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+}
+
+.preview-grid div {
+    padding: 0.75rem;
+    background: var(--bg-secondary);
+    border-radius: var(--radius-md);
+    font-size: 0.9375rem;
+}
+
+.preview-grid div.full-width {
+    grid-column: 1 / -1;
+}
+
+.preview-grid strong {
+    display: block;
+    color: var(--text-secondary);
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+    font-size: 0.875rem;
+}
+
+.preview-footer {
+    padding: 1.5rem 2rem;
+    border-top: 2px solid var(--border-color);
+    background: var(--bg-secondary);
+    border-radius: 0 0 var(--radius-xl) var(--radius-xl);
+}
+
+.preview-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+/* ============================================
+   SUCCESS PAGE
+   ============================================ */
+
+.success-page {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.success-card {
+    background: white;
+    padding: 3rem;
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-xl);
+    max-width: 600px;
+    width: 100%;
+    text-align: center;
+    animation: slideUp 0.5s ease-out;
+}
+
+.success-icon {
+    width: 5rem;
+    height: 5rem;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.5rem;
+    font-size: 2.5rem;
+    box-shadow: 0 10px 30px rgba(16, 185, 129, 0.3);
+    animation: scaleIn 0.5s ease-out 0.2s backwards;
+}
+
+@keyframes scaleIn {
+    from {
+        transform: scale(0);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.success-card.wide-card {
+    max-width: 900px;
+}
+
+.success-header-bar {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    margin-bottom: 1.5rem;
+    text-align: left;
+}
+
+.success-header-bar h1 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0 0 0.25rem;
+}
+
+.success-header-bar p {
+    font-size: 1rem;
+    color: var(--text-secondary);
+    margin: 0;
+}
+
+.success-card h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 1rem;
+}
+
+.success-card > p {
+    font-size: 1.125rem;
+    color: var(--text-secondary);
+    margin-bottom: 2rem;
+}
+
+/* ID Badges */
+.id-badge-row {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.id-badge {
+    flex: 1;
+    background: linear-gradient(135deg, #f0f4ff 0%, #e8eeff 100%);
+    border: 2px solid #dbeafe;
+    border-radius: var(--radius-lg);
+    padding: 1rem 1.25rem;
+    text-align: center;
+}
+
+.id-label {
+    display: block;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-secondary);
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+}
+
+.id-value {
+    display: block;
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: var(--primary-color);
+}
+
+/* Template Preview on Success Page */
+.template-preview-container {
+    background: white;
+    border: 2px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    max-height: 600px;
+    overflow-y: auto;
+    box-shadow: var(--shadow-sm);
+}
+
+.appointment-summary {
+    background: var(--bg-secondary);
+    padding: 1.5rem;
+    border-radius: var(--radius-lg);
+    margin-bottom: 2rem;
+    border: 2px solid var(--border-color);
+}
+
+.summary-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.summary-item:last-child {
+    border-bottom: none;
+}
+
+.summary-item strong {
+    color: var(--text-secondary);
+    font-weight: 600;
+}
+
+.summary-item span {
+    color: var(--text-primary);
+    font-weight: 500;
+}
+
+.summary-item .highlight {
+    color: var(--primary-color);
+    font-weight: 700;
+    font-size: 1.125rem;
+}
+
+.success-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.success-actions .btn {
+    width: 100%;
+    justify-content: center;
+}
+
+.success-note {
+    background: rgba(37, 99, 235, 0.1);
+    border: 2px solid var(--primary-light);
+    border-radius: var(--radius-md);
+    padding: 1rem;
+    margin-top: 1.5rem;
+}
+
+.success-note p {
+    font-size: 0.9375rem;
+    color: var(--text-primary);
+    margin: 0;
+}
+
+.success-note strong {
+    color: var(--primary-color);
+}
+
+/* ============================================
+   APPOINTMENT CONFIRMATION PAGE
+   ============================================ */
+
+.confirmation-container {
+    padding: 3rem 0;
+    min-height: calc(100vh - 80px);
+}
+
+.confirmation-card {
+    max-width: 900px;
+    margin: 0 auto;
+    background: white;
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-xl);
+    overflow: hidden;
+    animation: slideUp 0.5s ease-out;
+}
+
+.confirmation-header {
+    text-align: center;
+    padding: 3rem 2rem 2rem;
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: white;
+}
+
+.success-icon-large {
+    width: 5rem;
+    height: 5rem;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.5rem;
+    font-size: 2.5rem;
+    border: 3px solid rgba(255, 255, 255, 0.4);
+    animation: scaleIn 0.5s ease-out 0.2s backwards;
+}
+
+.confirmation-header h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.confirmation-header p {
+    font-size: 1.125rem;
+    opacity: 0.9;
+}
+
+.confirmation-card .id-badge-row {
+    display: flex;
+    gap: 1rem;
+    padding: 1.5rem 2rem;
+    background: var(--bg-secondary);
+    border-bottom: 2px solid var(--border-color);
+}
+
+.confirmation-details {
+    padding: 2rem;
+}
+
+.detail-section {
+    margin-bottom: 2rem;
+}
+
+.detail-section:last-child {
+    margin-bottom: 0;
+}
+
+.detail-section h3 {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--border-color);
+}
+
+.detail-section h3 svg {
+    font-size: 1rem;
+}
+
+.detail-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+}
+
+.detail-item {
+    background: var(--bg-secondary);
+    padding: 0.75rem 1rem;
+    border-radius: var(--radius-md);
+    border-left: 3px solid var(--primary-light);
+}
+
+.detail-item.full-width {
+    grid-column: 1 / -1;
+}
+
+.detail-label {
+    display: block;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin-bottom: 0.25rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.detail-value {
+    display: block;
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+.confirmation-note {
+    margin: 0 2rem;
+    padding: 1rem 1.25rem;
+    background: rgba(37, 99, 235, 0.08);
+    border: 2px solid var(--primary-light);
+    border-radius: var(--radius-md);
+}
+
+.confirmation-note p {
+    font-size: 0.9375rem;
+    color: var(--text-primary);
+    margin: 0;
+}
+
+.confirmation-note strong {
+    color: var(--primary-color);
+}
+
+.confirmation-actions {
+    display: flex;
+    gap: 1rem;
+    padding: 2rem;
+    justify-content: center;
+}
+
+.confirmation-actions .btn {
+    min-width: 200px;
+    justify-content: center;
+}
+
+/* ============================================
+   LOADING SPINNER
+   ============================================ */
+
+.spinner {
+    display: inline-block;
+    width: 1.25rem;
+    height: 1.25rem;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: white;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+
+@media (max-width: 768px) {
+    .appointment-header h1 {
+        font-size: 2rem;
+    }
+
+    .appointment-header p {
+        font-size: 1rem;
+    }
+
+    .progress-steps {
+        padding: 1.5rem 1rem;
+    }
+
+    .step-label {
+        font-size: 0.75rem;
+    }
+
+    .step-number {
+        width: 2.5rem;
+        height: 2.5rem;
+        font-size: 1rem;
+    }
+
+    .appointment-form {
+        padding: 1.5rem;
+    }
+
+    .step-title {
+        font-size: 1.5rem;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .form-group.full-width {
+        grid-column: 1;
+    }
+
+    .form-navigation {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .form-navigation .btn {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .radio-group {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .radio-label {
+        justify-content: center;
+    }
+
+    .preview-modal {
+        margin: 1rem;
+        max-height: calc(100vh - 2rem);
+    }
+
+    .preview-header,
+    .preview-body,
+    .preview-footer {
+        padding: 1.5rem;
+    }
+
+    .preview-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .verify-details .preview-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .verify-details .preview-grid div.full-width {
+        grid-column: 1;
+    }
+
+    .preview-actions {
+        flex-direction: column;
+    }
+
+    .preview-actions .btn {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .success-card {
+        padding: 2rem 1.5rem;
+    }
+
+    .success-card h1 {
+        font-size: 1.5rem;
+    }
+
+    .summary-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.25rem;
+    }
+
+    .id-badge-row {
+        flex-direction: column;
+    }
+
+    .success-header-bar {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .template-preview-container {
+        padding: 1rem;
+        max-height: 400px;
+    }
+
+    .captcha-container {
+        transform: scale(0.9);
+        transform-origin: center;
+    }
+
+    /* Confirmation page responsive */
+    .confirmation-header h1 {
+        font-size: 1.5rem;
+    }
+
+    .confirmation-header {
+        padding: 2rem 1.5rem 1.5rem;
+    }
+
+    .confirmation-card .id-badge-row {
+        flex-direction: column;
+        padding: 1rem 1.5rem;
+    }
+
+    .confirmation-details {
+        padding: 1.5rem;
+    }
+
+    .detail-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .detail-item.full-width {
+        grid-column: 1;
+    }
+
+    .confirmation-note {
+        margin: 0 1.5rem;
+    }
+
+    .confirmation-actions {
+        flex-direction: column;
+        padding: 1.5rem;
+    }
+
+    .confirmation-actions .btn {
+        width: 100%;
+        min-width: auto;
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        padding: 0 1rem;
+    }
+
+    .header-content {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .progress-steps {
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .step-wrapper {
+        flex-basis: calc(50% - 0.5rem);
+        justify-content: center;
+    }
+
+    .step-line {
+        display: none;
+    }
+
+    .appointment-form {
+        padding: 1rem;
+    }
+
+    .captcha-container {
+        transform: scale(0.8);
+    }
+
+    .visit-type-cards {
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .visit-type-card {
+        width: 100%;
+        max-width: 300px;
+        padding: 1.5rem;
+    }
+
+    .lookup-input-group {
+        flex-direction: column;
+    }
+}
+
+/* ============================================
+   VISIT TYPE SELECTION (Step 0)
+   ============================================ */
+
+.visit-type-selection {
+    text-align: center;
+    padding: 2rem 0;
+}
+
+.visit-type-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 2rem;
+}
+
+.visit-type-cards {
+    display: flex;
+    gap: 2rem;
+    justify-content: center;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+}
+
+.visit-type-card {
+    background: white;
+    border: 2px solid var(--border-color);
+    border-radius: 16px;
+    padding: 2.5rem 2rem;
+    width: 260px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.visit-type-card:hover {
+    border-color: var(--primary-color);
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(37, 99, 235, 0.15);
+}
+
+.visit-type-card.selected {
+    border-color: var(--primary-color);
+    background: linear-gradient(135deg, rgba(37, 99, 235, 0.04), rgba(37, 99, 235, 0.08));
+    box-shadow: 0 4px 16px rgba(37, 99, 235, 0.2);
+}
+
+.visit-type-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.25rem;
+    font-size: 1.5rem;
+}
+
+.visit-type-icon.new-patient-icon {
+    background: linear-gradient(135deg, #dbeafe, #bfdbfe);
+    color: #2563eb;
+}
+
+.visit-type-icon.followup-icon {
+    background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+    color: #059669;
+}
+
+.visit-type-card h3 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+}
+
+.visit-type-card p {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+    margin: 0;
+}
+
+/* Follow-up Lookup */
+.followup-lookup {
+    display: flex;
+    justify-content: center;
+    animation: fadeInUp 0.3s ease;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.lookup-card {
+    background: white;
+    border: 2px solid var(--border-color);
+    border-radius: 16px;
+    padding: 2rem;
+    max-width: 480px;
+    width: 100%;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.lookup-card h3 {
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.lookup-card > p {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin-bottom: 1.5rem;
+}
+
+.lookup-input-group {
+    display: flex;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+}
+
+.lookup-input-group .input-with-icon {
+    flex: 1;
+}
+
+.lookup-btn {
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.lookup-error {
+    display: block;
+    text-align: left;
+    margin-bottom: 1rem;
+}
+
+.lookup-back-btn {
+    margin-top: 1rem;
+    font-size: 0.9rem;
+}
+
+/* Visit Type Badge (Step 3) */
+.visit-type-badge-container {
+    display: flex;
+    align-items: center;
+    padding: 0.5rem 0;
+}
+
+.visit-type-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1.25rem;
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.visit-type-badge.badge-new {
+    background: linear-gradient(135deg, #dbeafe, #bfdbfe);
+    color: #1e40af;
+}
+
+.visit-type-badge.badge-followup {
+    background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+    color: #065f46;
+}
+
+/* ============================================
+   PRINT STYLES
+   ============================================ */
+
+@media print {
+    .header,
+    .form-navigation,
+    .btn {
+        display: none;
+    }
+
+    .appointment-page {
+        background: white;
+    }
+
+    .appointment-form {
+        box-shadow: none;
+    }
+}
+
+/* ============================================
+   ACCESSIBILITY
+   ============================================ */
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* Focus visible for keyboard navigation */
+*:focus-visible {
+    outline: 3px solid var(--primary-color);
+    outline-offset: 2px;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    :root {
+        --border-color: #000;
+        --text-secondary: #000;
+    }
+}

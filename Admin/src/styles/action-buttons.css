@@ -1,0 +1,127 @@
+/* ===== Unified Action Buttons (shared across all pages) ===== */
+
+.action-buttons {
+    display: flex;
+    gap: 0.5rem;
+}
+
+/* Base action button - icon only, fixed size */
+.action-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 0.875rem;
+    background: transparent;
+    color: #6c757d;
+}
+.action-btn:hover {
+    background: #f8f9fa;
+    color: #495057;
+}
+
+/* With label variant (icon + text, e.g. "Generate") */
+.action-btn.with-label {
+    width: auto;
+    padding: 6px 12px;
+    gap: 4px;
+    font-size: 13px;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+/* ----- Color Variants ----- */
+
+/* View (indigo) */
+.action-btn-view {
+    background: #e0e7ff;
+    color: #4338ca;
+}
+.action-btn-view:hover {
+    background: #c7d2fe;
+    color: #3730a3;
+}
+
+/* Edit (amber) */
+.action-btn-edit {
+    background: #fef3c7;
+    color: #92400e;
+}
+.action-btn-edit:hover {
+    background: #fde68a;
+    color: #78350f;
+}
+
+/* Delete (red) */
+.action-btn-delete {
+    background: #fee2e2;
+    color: #991b1b;
+}
+.action-btn-delete:hover {
+    background: #fecaca;
+    color: #7f1d1d;
+}
+
+/* Generate (solid red) */
+.action-btn-generate {
+    background: #f63b3b;
+    color: #fff;
+}
+.action-btn-generate:hover {
+    background: #eb2525;
+    color: #fff;
+}
+
+/* Complete (green) */
+.action-btn-complete {
+    background: #d1fae5;
+    color: #065f46;
+}
+.action-btn-complete:hover {
+    background: #a7f3d0;
+    color: #064e3b;
+}
+
+/* Remove (orange / amber) */
+.action-btn-remove {
+    background: #fef3c7;
+    color: #d97706;
+}
+.action-btn-remove:hover {
+    background: #fde68a;
+    color: #92400e;
+}
+
+/* Resolve (green) */
+.action-btn-resolve {
+    background: #d1fae5;
+    color: #065f46;
+}
+.action-btn-resolve:hover {
+    background: #a7f3d0;
+    color: #064e3b;
+}
+
+/* Close (red) */
+.action-btn-close {
+    background: #fee2e2;
+    color: #991b1b;
+}
+.action-btn-close:hover {
+    background: #fecaca;
+    color: #7f1d1d;
+}
+
+/* Toggle (indigo) */
+.action-btn-toggle {
+    font-size: 1.5rem;
+    color: #000000;
+}
+.action-btn-toggle:hover {
+    color: #ff0055;
+}

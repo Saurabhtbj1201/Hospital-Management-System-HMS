@@ -1,0 +1,336 @@
+/* Bell Button */
+.announcement-bell-btn {
+    position: absolute;
+    top: 2rem;
+    right: 2rem;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: #374151;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    z-index: 100;
+    font-size: 1.25rem;
+}
+
+.announcement-bell-btn:hover {
+    background: white;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+    transform: scale(1.05);
+}
+
+.announcement-badge {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    background: #ef4444;
+    color: white;
+    font-size: 0.625rem;
+    font-weight: 700;
+    min-width: 18px;
+    height: 18px;
+    border-radius: 9px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 4px;
+    border: 2px solid rgba(255, 255, 255, 0.95);
+}
+
+/* Slideout Overlay */
+.slideout-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 999;
+    animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+/* Slideout Panel */
+.announcement-slideout {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 100%;
+    max-width: 420px;
+    height: 100vh;
+    background: white;
+    box-shadow: -4px 0 24px rgba(0, 0, 0, 0.15);
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+    }
+
+    to {
+        transform: translateX(0);
+    }
+}
+
+/* Slideout Header */
+.slideout-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem 1.75rem;
+    border-bottom: 1px solid #e5e7eb;
+    background: white;
+}
+
+.slideout-header h3 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin: 0;
+}
+
+.slideout-close {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #f3f4f6;
+    border: none;
+    color: #6b7280;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 1rem;
+}
+
+.slideout-close:hover {
+    background: #e5e7eb;
+    color: #374151;
+}
+
+/* Slideout Content */
+.slideout-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0.5rem 0;
+}
+
+.slideout-loading,
+.slideout-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem 1.5rem;
+    color: #9ca3af;
+}
+
+.slideout-loading .spinner-small {
+    width: 32px;
+    height: 32px;
+    border: 3px solid #f3f4f6;
+    border-top-color: #667eea;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin-bottom: 1rem;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.slideout-empty svg {
+    font-size: 3rem;
+    color: #d1d5db;
+    margin-bottom: 1rem;
+}
+
+.slideout-empty p {
+    font-size: 0.9375rem;
+    margin: 0;
+}
+
+/* Announcements List */
+.announcements-list {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Announcement Notification Item */
+.announcement-notification {
+    display: flex;
+    gap: 1rem;
+    padding: 1rem 1.75rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    border-bottom: 1px solid #f3f4f6;
+    position: relative;
+}
+
+.announcement-notification:hover {
+    background: #f9fafb;
+}
+
+.announcement-notification:last-child {
+    border-bottom: none;
+}
+
+/* Notification Icon */
+.notification-icon {
+    position: relative;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 1.125rem;
+}
+
+.notification-dot {
+    position: absolute;
+    bottom: 2px;
+    right: 2px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    border: 2px solid white;
+}
+
+/* Type-specific colors */
+.announcement-type-info .notification-icon {
+    background: #eff6ff;
+    color: #2563eb;
+}
+
+.announcement-type-info .notification-dot {
+    background: #2563eb;
+}
+
+.announcement-type-warning .notification-icon {
+    background: #fef3c7;
+    color: #d97706;
+}
+
+.announcement-type-warning .notification-dot {
+    background: #d97706;
+}
+
+.announcement-type-success .notification-icon {
+    background: #d1fae5;
+    color: #059669;
+}
+
+.announcement-type-success .notification-dot {
+    background: #059669;
+}
+
+.announcement-type-error .notification-icon {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+.announcement-type-error .notification-dot {
+    background: #dc2626;
+}
+
+/* Notification Content */
+.notification-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.notification-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 0.5rem;
+    margin-bottom: 0.375rem;
+}
+
+.notification-title {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: #1a1a1a;
+    line-height: 1.4;
+}
+
+.notification-time {
+    font-size: 0.75rem;
+    color: #9ca3af;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.notification-message {
+    font-size: 0.875rem;
+    color: #6b7280;
+    line-height: 1.5;
+    margin: 0;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .announcement-bell-btn {
+        position: fixed;
+        top: 1rem;
+        right: 1rem;
+        z-index: 1001;
+    }
+}
+
+@media (max-width: 480px) {
+    .announcement-slideout {
+        max-width: 100%;
+    }
+
+    .slideout-header {
+        padding: 1.25rem 1.5rem;
+    }
+
+    .slideout-header h3 {
+        font-size: 1.125rem;
+    }
+
+    .announcement-notification {
+        padding: 0.875rem 1.5rem;
+    }
+
+    .notification-icon {
+        width: 36px;
+        height: 36px;
+        font-size: 1rem;
+    }
+
+    .notification-title {
+        font-size: 0.875rem;
+    }
+
+    .notification-message {
+        font-size: 0.8125rem;
+    }
+}

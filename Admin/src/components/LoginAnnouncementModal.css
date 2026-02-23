@@ -1,0 +1,113 @@
+.login-announcement-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    padding: 1rem;
+}
+
+.login-announcement-modal {
+    background: white;
+    border-radius: 16px;
+    width: 100%;
+    max-width: 500px;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
+    animation: modalSlideIn 0.3s ease-out;
+}
+
+@keyframes modalSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.login-announcement-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem 2rem;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.login-announcement-modal-header h2 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin: 0;
+}
+
+.modal-close-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: #f3f4f6;
+    border: none;
+    color: #6b7280;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 1rem;
+}
+
+.modal-close-btn:hover {
+    background: #e5e7eb;
+    color: #374151;
+}
+
+.login-announcement-modal-body {
+    padding: 2rem;
+}
+
+.modal-detail-row {
+    margin-bottom: 1.5rem;
+}
+
+.modal-detail-row:last-child {
+    margin-bottom: 0;
+}
+
+.modal-detail-row label {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 0.75rem;
+}
+
+.modal-detail-row p {
+    font-size: 0.9375rem;
+    color: #374151;
+    line-height: 1.6;
+    margin: 0;
+    white-space: pre-wrap;
+}
+
+@media (max-width: 768px) {
+    .login-announcement-modal {
+        max-width: 90%;
+    }
+
+    .login-announcement-modal-header {
+        padding: 1.25rem 1.5rem;
+    }
+
+    .login-announcement-modal-body {
+        padding: 1.5rem;
+    }
+}
