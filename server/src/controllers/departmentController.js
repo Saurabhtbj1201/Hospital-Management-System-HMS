@@ -1,13 +1,23 @@
 const Department = require('../models/Department');
 const Doctor = require('../models/Doctor');
 const User = require('../models/User');
-const { getPresignedUrl } = require('../services/s3Service');
+const { getPresignedUrl, uploadToS3, deleteFromS3 } = require('../services/s3Service');
 
 // Get all departments
 exports.getDepartments = async (req, res) => {
     try {
         const departments = await Department.find({ isActive: true });
-        res.json(departments);
+
+        // Generate presigned URLs for department images
+        const departmentsWithImages = await Promise.all(
+            departments.map(async (dept) => {
+                const deptObj = dept.toObject();
+                deptObj.imageUrl = await getPresignedUrl(dept.image);
+                return deptObj;
+            })
+        );
+
+        res.json(departmentsWithImages);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
@@ -27,9 +37,11 @@ exports.getAllDepartments = async (req, res) => {
                         { departments: dept._id }
                     ]
                 });
+                const imageUrl = await getPresignedUrl(dept.image);
                 return {
                     ...dept.toObject(),
-                    doctorCount
+                    doctorCount,
+                    imageUrl
                 };
             })
         );
@@ -65,8 +77,11 @@ exports.getDepartmentById = async (req, res) => {
             })
         );
 
+        const imageUrl = await getPresignedUrl(department.image);
+
         res.json({
             ...department.toObject(),
+            imageUrl,
             doctors: doctorsWithPhotos
         });
     } catch (error) {
@@ -173,6 +188,66 @@ exports.deleteDepartment = async (req, res) => {
         await department.save();
 
         res.json({ message: 'Department deleted successfully' });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+// Upload department image
+exports.uploadDepartmentImage = async (req, res) => {
+    try {
+        if (!req.file) {
+            return res.status(400).json({ message: 'No image file provided' });
+        }
+
+        const department = await Department.findById(req.params.id);
+        if (!department) {
+            return res.status(404).json({ message: 'Department not found' });
+        }
+
+        // Delete old image from S3 if exists
+        if (department.image) {
+            await deleteFromS3(department.image);
+        }
+
+        // Upload new image
+        const key = await uploadToS3(
+            req.file.buffer,
+            req.file.originalname,
+            'department-images',
+            req.file.mimetype
+        );
+
+        department.image = key;
+        await department.save();
+
+        const imageUrl = await getPresignedUrl(key);
+
+        res.json({
+            message: 'Department image uploaded successfully',
+            image: key,
+            imageUrl
+        });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+// Delete department image
+exports.deleteDepartmentImage = async (req, res) => {
+    try {
+        const department = await Department.findById(req.params.id);
+        if (!department) {
+            return res.status(404).json({ message: 'Department not found' });
+        }
+
+        if (department.image) {
+            await deleteFromS3(department.image);
+            department.image = '';
+            await department.save();
+        }
+
+        res.json({ message: 'Department image deleted successfully' });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }

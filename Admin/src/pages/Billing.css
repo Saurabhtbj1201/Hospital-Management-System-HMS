@@ -384,40 +384,6 @@
     border-top: 1px solid #e5e7eb;
 }
 
-.btn-primary {
-    background: #3b82f6;
-    color: #fff;
-    border: none;
-    padding: 10px 24px;
-    border-radius: 8px;
-    font-size: 14px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: background 0.2s;
-}
-.btn-primary:hover:not(:disabled) {
-    background: #2563eb;
-}
-.btn-primary:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-}
-
-.btn-secondary {
-    background: #f3f4f6;
-    color: #374151;
-    border: 1px solid #d1d5db;
-    padding: 10px 24px;
-    border-radius: 8px;
-    font-size: 14px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s;
-}
-.btn-secondary:hover {
-    background: #e5e7eb;
-}
-
 .loading-text {
     text-align: center;
     padding: 30px;
@@ -551,6 +517,121 @@
 .remove-service-btn:hover {
     background: #fecaca;
     color: #dc2626;
+}
+
+/* Service Picker Dropdown */
+.service-picker-dropdown {
+    background: #ffffff;
+    border: 1px solid #d1d5db;
+    border-radius: 10px;
+    margin-bottom: 12px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+    overflow: hidden;
+}
+
+.service-picker-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 14px;
+    background: #f3f4f6;
+    border-bottom: 1px solid #e5e7eb;
+    font-size: 13px;
+    font-weight: 600;
+    color: #374151;
+}
+
+.close-picker-btn {
+    background: none;
+    border: none;
+    color: #6b7280;
+    cursor: pointer;
+    padding: 2px;
+    display: flex;
+    align-items: center;
+    border-radius: 4px;
+    transition: all 0.2s;
+}
+.close-picker-btn:hover {
+    background: #e5e7eb;
+    color: #1f2937;
+}
+
+.picker-section-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 10px 14px 6px;
+    margin: 0;
+}
+
+.dept-services-list {
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.dept-service-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 10px 14px;
+    background: none;
+    border: none;
+    border-bottom: 1px solid #f3f4f6;
+    cursor: pointer;
+    transition: background 0.15s;
+    text-align: left;
+}
+.dept-service-item:hover {
+    background: #eff6ff;
+}
+.dept-service-item:last-child {
+    border-bottom: none;
+}
+
+.ds-name {
+    font-size: 14px;
+    font-weight: 500;
+    color: #1f2937;
+}
+
+.ds-fee {
+    font-size: 14px;
+    font-weight: 600;
+    color: #059669;
+    white-space: nowrap;
+}
+
+.custom-service-option {
+    padding: 8px 14px;
+}
+
+.custom-service-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    width: 100%;
+    padding: 10px 14px;
+    background: #f0fdf4;
+    border: 1px dashed #86efac;
+    border-radius: 6px;
+    color: #15803d;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.custom-service-btn:hover {
+    background: #dcfce7;
+    border-color: #4ade80;
+}
+
+/* Default fee row highlight */
+.default-fee-row {
+    background: #eff6ff !important;
+    border-color: #bfdbfe !important;
 }
 
 /* ═══════════════════════════════════════════════

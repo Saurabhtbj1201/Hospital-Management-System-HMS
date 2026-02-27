@@ -3,6 +3,7 @@ const router = express.Router();
 const { protect, authorize } = require('../middleware/authMiddleware');
 const Bill = require('../models/Bill');
 const PublicAppointment = require('../models/PublicAppointment');
+const Department = require('../models/Department');
 const Admin = require('../models/Admin');
 const Receptionist = require('../models/Receptionist');
 const { getPresignedUrl } = require('../services/s3Service');
@@ -125,11 +126,30 @@ router.get('/doctor-fee/:appointmentId', protect, authorize('Admin', 'Receptioni
             return res.status(404).json({ success: false, message: 'Appointment not found' });
         }
 
+        // Fetch department data (defaultConsultationFee + services) by department name
+        let departmentData = null;
+        if (appointment.department) {
+            const dept = await Department.findOne({ name: appointment.department, isActive: true });
+            if (dept) {
+                departmentData = {
+                    _id: dept._id,
+                    name: dept.name,
+                    defaultConsultationFee: dept.defaultConsultationFee || 0,
+                    services: (dept.services || []).map(s => ({
+                        serviceName: s.serviceName,
+                        fee: s.fee,
+                        description: s.description || ''
+                    }))
+                };
+            }
+        }
+
         res.json({
             success: true,
             data: {
                 doctorFee: appointment.doctorAssigned?.fees || 0,
                 doctorName: appointment.doctorAssigned?.user?.name || 'Not Assigned',
+                department: departmentData,
                 appointment: {
                     appointmentId: appointment.appointmentId,
                     patientId: appointment.patientId,

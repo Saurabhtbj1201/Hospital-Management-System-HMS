@@ -194,23 +194,6 @@
     margin: 0;
 }
 
-.btn-secondary {
-    padding: 0.5rem 1rem;
-    background: #edf2f7;
-    color: #667eea;
-    border: none;
-    border-radius: 8px;
-    font-size: 0.875rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.btn-secondary:hover {
-    background: #667eea;
-    color: white;
-}
-
 .appointments-list {
     display: flex;
     flex-direction: column;

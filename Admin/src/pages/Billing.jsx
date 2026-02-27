@@ -17,6 +17,8 @@ const GenerateInvoiceModal = ({ appointment, onClose, onGenerated }) => {
     const [roundOff, setRoundOff] = useState(0);
     const [loading, setLoading] = useState(true);
     const [submitting, setSubmitting] = useState(false);
+    const [departmentServices, setDepartmentServices] = useState([]);
+    const [showServicePicker, setShowServicePicker] = useState(false);
 
     useEffect(() => {
         fetchDoctorFee();
@@ -25,8 +27,20 @@ const GenerateInvoiceModal = ({ appointment, onClose, onGenerated }) => {
     const fetchDoctorFee = async () => {
         try {
             const res = await billingAPI.getDoctorFee(appointment._id);
-            const { doctorFee, doctorName } = res.data;
+            const { doctorFee, doctorName, department } = res.data;
             const initialServices = [];
+
+            // Add department default consultation fee
+            if (department && department.defaultConsultationFee > 0) {
+                initialServices.push({
+                    name: `Default Consultation Fee (${department.name})`,
+                    description: `Department consultation fee`,
+                    amount: department.defaultConsultationFee,
+                    isDefault: true
+                });
+            }
+
+            // Add doctor consultation fee
             if (doctorFee > 0) {
                 initialServices.push({
                     name: 'Doctor Consultation Fee',
@@ -34,7 +48,13 @@ const GenerateInvoiceModal = ({ appointment, onClose, onGenerated }) => {
                     amount: doctorFee
                 });
             }
+
             setServices(initialServices);
+
+            // Store department services for the service picker
+            if (department && department.services && department.services.length > 0) {
+                setDepartmentServices(department.services);
+            }
         } catch {
             toast.error('Failed to fetch doctor fee');
         } finally {
@@ -43,7 +63,21 @@ const GenerateInvoiceModal = ({ appointment, onClose, onGenerated }) => {
     };
 
     const addService = () => {
+        setShowServicePicker(true);
+    };
+
+    const addDepartmentService = (deptService) => {
+        setServices([...services, {
+            name: deptService.serviceName,
+            description: deptService.description || '',
+            amount: deptService.fee
+        }]);
+        setShowServicePicker(false);
+    };
+
+    const addCustomService = () => {
         setServices([...services, { name: '', description: '', amount: 0 }]);
+        setShowServicePicker(false);
     };
 
     const removeService = (index) => {
@@ -127,12 +161,42 @@ const GenerateInvoiceModal = ({ appointment, onClose, onGenerated }) => {
                                     </button>
                                 </div>
 
-                                {services.length === 0 && (
+                                {/* Service Picker Dropdown */}
+                                {showServicePicker && (
+                                    <div className="service-picker-dropdown">
+                                        <div className="service-picker-header">
+                                            <span>Select a service or create custom</span>
+                                            <button className="close-picker-btn" onClick={() => setShowServicePicker(false)}><X size={14} /></button>
+                                        </div>
+                                        {departmentServices.length > 0 && (
+                                            <div className="dept-services-list">
+                                                <p className="picker-section-label">Department Services ({appointment.department || 'N/A'})</p>
+                                                {departmentServices.map((ds, idx) => (
+                                                    <button
+                                                        key={idx}
+                                                        className="dept-service-item"
+                                                        onClick={() => addDepartmentService(ds)}
+                                                    >
+                                                        <span className="ds-name">{ds.serviceName}</span>
+                                                        <span className="ds-fee">{RS}{ds.fee}</span>
+                                                    </button>
+                                                ))}
+                                            </div>
+                                        )}
+                                        <div className="custom-service-option">
+                                            <button className="custom-service-btn" onClick={addCustomService}>
+                                                <Plus size={14} /> Create Custom Service
+                                            </button>
+                                        </div>
+                                    </div>
+                                )}
+
+                                {services.length === 0 && !showServicePicker && (
                                     <p className="no-services-text">No services added. Click "Add Service" to begin.</p>
                                 )}
 
                                 {services.map((service, index) => (
-                                    <div key={index} className="service-row">
+                                    <div key={index} className={`service-row ${service.isDefault ? 'default-fee-row' : ''}`}>
                                         <div className="service-field">
                                             <label>Service Name</label>
                                             <input

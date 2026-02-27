@@ -95,6 +95,8 @@ export const departmentsAPI = {
     create: (deptData) => api.post('/departments', deptData),
     update: (id, deptData) => api.put(`/departments/${id}`, deptData),
     delete: (id) => api.delete(`/departments/${id}`),
+    uploadImage: (id, formData) => api.post(`/departments/${id}/upload-image`, formData, { headers: { 'Content-Type': 'multipart/form-data' } }),
+    deleteImage: (id) => api.delete(`/departments/${id}/image`),
 };
 
 // Appointments
@@ -141,6 +143,7 @@ export const dashboardAPI = {
     getStats: () => api.get('/dashboard/stats'),
     getRecentAppointments: () => api.get('/dashboard/appointments'),
     getChartData: (type) => api.get(`/dashboard/charts/${type}`),
+    getActivityFeed: () => api.get('/dashboard/activity'),
 };
 
 // Settings

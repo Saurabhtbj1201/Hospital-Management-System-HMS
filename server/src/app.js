@@ -27,6 +27,7 @@ app.use('/api/admin/appointments', require('./routes/adminAppointmentRoutes'));
 app.use('/api/profile', require('./routes/profileRoutes'));
 app.use('/api/slot-config', require('./routes/slotConfigRoutes'));
 app.use('/api/invoice-template', require('./routes/invoiceTemplateRoutes'));
+app.use('/api/dashboard', require('./routes/dashboardRoutes'));
 
 app.get('/', (req, res) => {
     res.send('API is running...');

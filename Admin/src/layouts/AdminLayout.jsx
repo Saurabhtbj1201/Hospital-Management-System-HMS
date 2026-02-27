@@ -393,11 +393,11 @@ const AdminLayout = () => {
     };
 
     return (
-        <div className="flex h-screen bg-gray-50">
+        <div className="flex min-h-screen h-screen bg-gray-50" style={{ height: '100dvh' }}>
             <Sidebar isOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
-            <div className="flex-1 flex flex-col lg:ml-64">
+            <div className="flex-1 flex flex-col min-h-0 lg:ml-64">
                 <Header toggleSidebar={toggleSidebar} />
-                <main className="flex-1 overflow-y-auto">
+                <main className="flex-1 overflow-y-auto min-h-0">
                     <Outlet />
                 </main>
             </div>

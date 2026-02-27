@@ -415,22 +415,6 @@
     border-top: 1px solid #e9ecef;
 }
 
-.btn-secondary {
-    padding: 0.75rem 1.5rem;
-    background: white;
-    color: #495057;
-    border: 1px solid #ced4da;
-    border-radius: 8px;
-    font-size: 0.95rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s;
-}
-
-.btn-secondary:hover {
-    background: #f8f9fa;
-}
-
 @media (max-width: 1024px) {
     .filters-section {
         flex-direction: column;
