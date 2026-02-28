@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { Building2, Plus, Edit2, Trash2, Power, UserPlus, X, Crown, Users as UsersIcon, Phone, Mail, Trash, Eye, MapPin, Clock, IndianRupee, Image, FileText, Stethoscope, Upload, Crop, ZoomIn, ZoomOut, RotateCw, Loader2 } from 'lucide-react';
+import { Building2, Plus, Edit2, Trash2, Power, UserPlus, X, Crown, Users as UsersIcon, Phone, Mail, Trash, Eye, MapPin, Clock, IndianRupee, Image, FileText, Stethoscope, Upload, Crop, ZoomIn, ZoomOut, RotateCw, Loader2, Download } from 'lucide-react';
 import { toast } from 'sonner';
 import Cropper from 'react-easy-crop';
 import api, { departmentsAPI } from '../services/api';
@@ -399,17 +399,77 @@ const Departments = () => {
         }
     };
 
+    const [downloading, setDownloading] = useState(false);
+
+    const handleDownloadData = async () => {
+        if (!departments.length) {
+            toast.error('No department data to download');
+            return;
+        }
+        try {
+            setDownloading(true);
+            // Fetch details for each department to get assigned doctor names
+            const detailedDepts = await Promise.all(
+                departments.map(async (dept) => {
+                    try {
+                        const details = await api.get(`/departments/${dept._id}`);
+                        return { ...dept, doctors: details.doctors || [] };
+                    } catch {
+                        return { ...dept, doctors: [] };
+                    }
+                })
+            );
+
+            const headers = ['Name', 'Description', 'Consultation Fee', 'Doctor Count', 'Assigned Doctors', 'Status', 'Image Link', 'Phone', 'Email', 'Location', 'Services', 'Created At'];
+            const rows = detailedDepts.map((dept) => [
+                dept.name || '',
+                (dept.description || '').replace(/[\n\r]+/g, ' '),
+                dept.defaultConsultationFee || 0,
+                dept.doctorCount || 0,
+                (dept.doctors || []).map(d => d.user?.name || 'Unknown').join('; '),
+                dept.isActive ? 'Active' : 'Inactive',
+                dept.imageUrl || '',
+                dept.contact?.phone || '',
+                dept.contact?.email || '',
+                dept.contact?.location || '',
+                (dept.services || []).map(s => `${s.serviceName} (₹${s.fee})`).join('; '),
+                dept.createdAt ? new Date(dept.createdAt).toLocaleDateString() : ''
+            ]);
+            const csvContent = [headers, ...rows]
+                .map(row => row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(','))
+                .join('\n');
+            const blob = new Blob([`\uFEFF${csvContent}`], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `departments_${new Date().toISOString().slice(0, 10)}.csv`;
+            link.click();
+            URL.revokeObjectURL(url);
+            toast.success('Department data downloaded');
+        } catch {
+            toast.error('Failed to download department data');
+        } finally {
+            setDownloading(false);
+        }
+    };
+
     return (
         <div className="p-6">
-            <div className="flex items-center mb-6 justify-between">
+            <div className="flex items-center mb-4 justify-between">
                 <div>
                     <h1 className="text-2xl font-bold text-gray-900">Departments</h1>
                     <p className="text-gray-600 mt-1">Manage hospital departments and assignments</p>
                 </div>
-                <button onClick={() => setShowModal(true)} className="btn-primary">
-                    <Plus className="w-5 h-5 mr-2" />
-                    Add Department
-                </button>
+                <div className="flex items-center gap-3">
+                    <button onClick={handleDownloadData} disabled={downloading} className="btn-secondary" title="Download all department data as CSV">
+                        {downloading ? <Loader2 className="w-5 h-5 mr-2 animate-spin" /> : <Download className="w-5 h-5 mr-2" />}
+                        {downloading ? 'Downloading...' : 'Download All'}
+                    </button>
+                    <button onClick={() => setShowModal(true)} className="btn-primary">
+                        <Plus className="w-5 h-5 mr-2" />
+                        Add Department
+                    </button>
+                </div>
             </div>
 
             <div className="card overflow-hidden">

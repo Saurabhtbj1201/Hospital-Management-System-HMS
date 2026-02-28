@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
-import { Search, X, Phone, Mail, User, Calendar, ChevronLeft, ChevronRight, RefreshCw, FileText, Clock, CheckCircle, XCircle, AlertCircle } from 'lucide-react';
+import { Search, X, Phone, Mail, User, Calendar, ChevronLeft, ChevronRight, RefreshCw, FileText, Clock, CheckCircle, XCircle, AlertCircle, Download, Filter, ChevronDown, Loader2 } from 'lucide-react';
 import { patientsAPI } from '../services/api';
+import { toast } from 'sonner';
 import './Patients.css';
 
 const Patients = () => {
@@ -13,6 +14,7 @@ const Patients = () => {
     const [appointmentsModal, setAppointmentsModal] = useState(false);
     const [patientAppointments, setPatientAppointments] = useState([]);
     const [appointmentsLoading, setAppointmentsLoading] = useState(false);
+    const [showDownloadModal, setShowDownloadModal] = useState(false);
 
     useEffect(() => {
         fetchPatients();
@@ -88,9 +90,15 @@ const Patients = () => {
                     <h1>Patient Records</h1>
                     <p>View patient information and appointment history</p>
                 </div>
-                <button className="refresh-btn" onClick={fetchPatients} title="Refresh">
-                    <RefreshCw size={18} />
-                </button>
+                <div className="patients-header-actions">
+                    <button className="pat-dl-trigger-btn" onClick={() => setShowDownloadModal(true)}>
+                        <Download size={16} />
+                        Download
+                    </button>
+                    <button className="refresh-btn" onClick={fetchPatients} title="Refresh">
+                        <RefreshCw size={18} />
+                    </button>
+                </div>
             </div>
 
             <div className="patients-toolbar">
@@ -208,8 +216,8 @@ const Patients = () => {
             {/* Appointments Modal */}
             {appointmentsModal && selectedPatient && (
                 <div className="modal-overlay" onClick={closeModal}>
-                    <div className="modal-content appointments-modal" onClick={(e) => e.stopPropagation()}>
-                        <div className="modal-header">
+                    <div className="patient-modal-content appointments-modal" onClick={(e) => e.stopPropagation()}>
+                        <div className="patient-modal-header">
                             <div>
                                 <h2>Appointments</h2>
                                 <p className="modal-subtitle">
@@ -227,7 +235,7 @@ const Patients = () => {
                             </button>
                         </div>
 
-                        <div className="modal-body">
+                        <div className="patient-modal-body">
                             {appointmentsLoading ? (
                                 <div className="loading-state">
                                     <div className="spinner"></div>
@@ -298,6 +306,249 @@ const Patients = () => {
                     </div>
                 </div>
             )}
+            {showDownloadModal && (
+                <PatientDownloadModal onClose={() => setShowDownloadModal(false)} />
+            )}
+        </div>
+    );
+};
+
+/* ================================================================
+   PATIENT DOWNLOAD FILTER MODAL
+   ================================================================ */
+const PatientDownloadModal = ({ onClose }) => {
+    const [gender, setGender] = useState('');
+    const [agePreset, setAgePreset] = useState('');
+    const [customAgeMin, setCustomAgeMin] = useState('');
+    const [customAgeMax, setCustomAgeMax] = useState('');
+    const [visitType, setVisitType] = useState('');
+    const [downloading, setDownloading] = useState(false);
+    const [downloadDone, setDownloadDone] = useState(false);
+
+    const handleClear = () => {
+        setGender('');
+        setAgePreset('');
+        setCustomAgeMin('');
+        setCustomAgeMax('');
+        setVisitType('');
+    };
+
+    const getAgeRange = () => {
+        switch (agePreset) {
+            case 'below_18': return { ageMin: 0, ageMax: 17 };
+            case 'above_60': return { ageMin: 60, ageMax: undefined };
+            case 'custom': return {
+                ageMin: customAgeMin ? parseInt(customAgeMin) : undefined,
+                ageMax: customAgeMax ? parseInt(customAgeMax) : undefined
+            };
+            default: return {};
+        }
+    };
+
+    const handleDownload = async () => {
+        try {
+            setDownloading(true);
+            setDownloadDone(false);
+
+            const { ageMin, ageMax } = getAgeRange();
+            const params = {
+                gender: gender || undefined,
+                ageMin: ageMin !== undefined ? ageMin : undefined,
+                ageMax: ageMax !== undefined ? ageMax : undefined,
+                visitType: visitType || undefined,
+            };
+
+            const response = await patientsAPI.download(params);
+            const data = response.data || [];
+
+            if (!data.length) {
+                toast.error('No patients found for the selected filters');
+                setDownloading(false);
+                return;
+            }
+
+            // Build CSV - one row per appointment
+            const headers = [
+                'Patient ID', 'Patient Name', 'Mobile', 'Email', 'Gender', 'Age',
+                'Total Appointments', 'Appointment ID', 'Date', 'Time', 'Status',
+                'Department', 'Visit Type', 'Assigned Doctor', 'Reason', 'Primary Concern', 'Cancel Reason'
+            ];
+
+            const rows = [];
+            data.forEach(p => {
+                if (p.appointments && p.appointments.length > 0) {
+                    p.appointments.forEach((a, i) => {
+                        rows.push([
+                            i === 0 ? (p.patientId || '') : '',
+                            i === 0 ? (p.fullName || '') : '',
+                            i === 0 ? (p.mobileNumber || '') : '',
+                            i === 0 ? (p.emailAddress || '') : '',
+                            i === 0 ? (p.gender || '') : '',
+                            i === 0 ? (p.age != null ? p.age : '') : '',
+                            i === 0 ? (p.totalAppointments || 0) : '',
+                            a.appointmentId || '',
+                            a.appointmentDate ? new Date(a.appointmentDate).toLocaleDateString('en-IN') : '',
+                            a.appointmentTime || '',
+                            a.appointmentStatus || '',
+                            a.department || '',
+                            a.visitType || '',
+                            a.doctorName || 'Not Assigned',
+                            a.reasonForVisit || '',
+                            a.primaryConcern || '',
+                            a.cancelReason || ''
+                        ]);
+                    });
+                } else {
+                    rows.push([
+                        p.patientId || '', p.fullName || '', p.mobileNumber || '',
+                        p.emailAddress || '', p.gender || '', p.age != null ? p.age : '',
+                        p.totalAppointments || 0, '', '', '', '', '', '', '', '', '', ''
+                    ]);
+                }
+            });
+
+            const csvContent = [headers, ...rows]
+                .map(r => r.map(c => `"${String(c).replace(/"/g, '""')}"`).join(','))
+                .join('\n');
+
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `patients_${new Date().toISOString().slice(0, 10)}.csv`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+
+            setDownloadDone(true);
+            toast.success(`Downloaded ${data.length} patient records`);
+            setTimeout(() => {
+                setDownloading(false);
+                setDownloadDone(false);
+                onClose();
+            }, 1200);
+        } catch (err) {
+            console.error('Download error:', err);
+            toast.error('Failed to download patient records');
+            setDownloading(false);
+        }
+    };
+
+    return (
+        <div className="pat-dl-overlay" onClick={onClose}>
+            <div className="pat-dl-modal" onClick={e => e.stopPropagation()}>
+                {/* Header */}
+                <div className="pat-dl-header">
+                    <div className="pat-dl-header-left">
+                        <Filter size={18} />
+                        <div>
+                            <h2>Download Patient Records</h2>
+                            <p>Apply filters and export as CSV</p>
+                        </div>
+                    </div>
+                    <button className="pat-dl-close" onClick={onClose}>
+                        <X size={18} />
+                    </button>
+                </div>
+
+                {/* Body */}
+                <div className="pat-dl-body">
+                    {/* Gender */}
+                    <div className="pat-dl-section">
+                        <label className="pat-dl-label">Gender</label>
+                        <div className="pat-dl-chip-row">
+                            {[
+                                { key: '', label: 'All' },
+                                { key: 'Male', label: 'Male' },
+                                { key: 'Female', label: 'Female' },
+                            ].map(opt => (
+                                <button
+                                    key={opt.key}
+                                    className={`pat-dl-chip ${gender === opt.key ? 'active' : ''}`}
+                                    onClick={() => setGender(opt.key)}
+                                >
+                                    {opt.label}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* Age */}
+                    <div className="pat-dl-section">
+                        <label className="pat-dl-label">Age</label>
+                        <div className="pat-dl-chip-row">
+                            {[
+                                { key: '', label: 'All Ages' },
+                                { key: 'below_18', label: 'Below 18' },
+                                { key: 'above_60', label: 'Above 60' },
+                                { key: 'custom', label: 'Custom' },
+                            ].map(opt => (
+                                <button
+                                    key={opt.key}
+                                    className={`pat-dl-chip ${agePreset === opt.key ? 'active' : ''}`}
+                                    onClick={() => setAgePreset(opt.key)}
+                                >
+                                    {opt.label}
+                                </button>
+                            ))}
+                        </div>
+                        {agePreset === 'custom' && (
+                            <div className="pat-dl-age-range">
+                                <div className="pat-dl-age-field">
+                                    <label>Min Age</label>
+                                    <input type="number" min="0" max="150" placeholder="0" value={customAgeMin} onChange={e => setCustomAgeMin(e.target.value)} />
+                                </div>
+                                <span className="pat-dl-age-sep">—</span>
+                                <div className="pat-dl-age-field">
+                                    <label>Max Age</label>
+                                    <input type="number" min="0" max="150" placeholder="150" value={customAgeMax} onChange={e => setCustomAgeMax(e.target.value)} />
+                                </div>
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Visit Type */}
+                    <div className="pat-dl-section">
+                        <label className="pat-dl-label">Appointments</label>
+                        <div className="pat-dl-chip-row">
+                            {[
+                                { key: '', label: 'All' },
+                                { key: 'New Patient', label: 'New Patient' },
+                                { key: 'Follow-up', label: 'Follow-up' },
+                            ].map(opt => (
+                                <button
+                                    key={opt.key}
+                                    className={`pat-dl-chip ${visitType === opt.key ? 'active' : ''}`}
+                                    onClick={() => setVisitType(opt.key)}
+                                >
+                                    {opt.label}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+
+                {/* Footer */}
+                <div className="pat-dl-footer">
+                    <button className="pat-dl-clear-btn" onClick={handleClear}>Clear Filters</button>
+                    <button
+                        className={`pat-dl-download-btn ${downloading ? (downloadDone ? 'done' : 'loading') : ''}`}
+                        onClick={handleDownload}
+                        disabled={downloading}
+                    >
+                        {downloading ? (
+                            downloadDone ? (
+                                <><CheckCircle size={16} /> Done!</>
+                            ) : (
+                                <><Loader2 size={16} className="pat-dl-spin" /> Downloading...</>
+                            )
+                        ) : (
+                            <><Download size={16} /> Download CSV</>
+                        )}
+                    </button>
+                </div>
+            </div>
         </div>
     );
 };

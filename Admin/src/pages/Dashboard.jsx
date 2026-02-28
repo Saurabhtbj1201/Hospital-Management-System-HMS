@@ -225,7 +225,7 @@ const Dashboard = () => {
     // ── Loading State ──
     if (loading) {
         return (
-            <div className="dashboard">
+            <div className="dashboard p-6">
                 <div className="dashboard-header">
                     <div>
                         <div className="skeleton" style={{ width: 260, height: 26, marginBottom: 8 }} />

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { UserCog, Plus, Search, Edit2, RotateCcw, Power, Trash2, X } from 'lucide-react';
+import { UserCog, Plus, Search, Edit2, RotateCcw, Power, Trash2, X, Download, Loader2, Eye, Phone, Mail, Calendar, Briefcase, GraduationCap, Shield, Clock, User } from 'lucide-react';
 import { toast } from 'sonner';
 import api from '../services/api';
 
@@ -14,6 +14,10 @@ const ReceptionistManagement = () => {
         email: '',
         phone: ''
     });
+    const [downloading, setDownloading] = useState(false);
+    const [showDetailModal, setShowDetailModal] = useState(false);
+    const [detailData, setDetailData] = useState(null);
+    const [detailLoading, setDetailLoading] = useState(false);
 
     useEffect(() => {
         fetchReceptionists();
@@ -95,6 +99,77 @@ const ReceptionistManagement = () => {
         setFormData({ name: '', email: '', phone: '' });
     };
 
+    const handleViewDetail = async (receptionist) => {
+        setShowDetailModal(true);
+        setDetailLoading(true);
+        try {
+            const data = await api.get(`/user-management/profile/${receptionist._id}`);
+            setDetailData(data);
+        } catch (error) {
+            toast.error('Failed to fetch receptionist details');
+            setShowDetailModal(false);
+        } finally {
+            setDetailLoading(false);
+        }
+    };
+
+    const handleDownloadData = async () => {
+        if (!receptionists.length) {
+            toast.error('No receptionist data to download');
+            return;
+        }
+        try {
+            setDownloading(true);
+            const profiles = await Promise.all(
+                receptionists.map(async (r) => {
+                    try {
+                        return await api.get(`/user-management/profile/${r._id}`);
+                    } catch {
+                        return { ...r, receptionistProfile: null };
+                    }
+                })
+            );
+            const headers = [
+                'Name', 'Email', 'Phone', 'Status', 'Gender', 'Date of Birth',
+                'Shift', 'Joining Date', 'Experience (Years)', 'Education Level',
+                'ID Proof Type', 'ID Proof Number', 'Created At'
+            ];
+            const rows = profiles.map((p) => {
+                const rp = p.receptionistProfile || {};
+                return [
+                    p.name || '',
+                    p.email || '',
+                    p.phone || '',
+                    p.isActive ? 'Active' : 'Inactive',
+                    rp.gender || '',
+                    rp.dateOfBirth ? new Date(rp.dateOfBirth).toLocaleDateString() : '',
+                    rp.shift || '',
+                    rp.joiningDate ? new Date(rp.joiningDate).toLocaleDateString() : '',
+                    rp.experience || 0,
+                    rp.educationLevel || '',
+                    rp.idProofType || '',
+                    rp.idProofNumber || '',
+                    p.createdAt ? new Date(p.createdAt).toLocaleDateString() : ''
+                ];
+            });
+            const csvContent = [headers, ...rows]
+                .map(row => row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(','))
+                .join('\n');
+            const blob = new Blob([`\uFEFF${csvContent}`], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `receptionists_${new Date().toISOString().slice(0, 10)}.csv`;
+            link.click();
+            URL.revokeObjectURL(url);
+            toast.success('Receptionist data downloaded');
+        } catch {
+            toast.error('Failed to download receptionist data');
+        } finally {
+            setDownloading(false);
+        }
+    };
+
     const filteredReceptionists = (receptionists || []).filter(receptionist =>
         receptionist.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         receptionist.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -103,33 +178,38 @@ const ReceptionistManagement = () => {
 
     return (
         <div className="p-6">
-            <div className="flex items-start justify-between mb-6">
+            <div className="flex items-start justify-between mb-4">
                 <div>
                     <h1 className="text-2xl font-bold text-gray-900 mb-1">Receptionist Management</h1>
                     <p className="text-gray-600">Manage receptionists and their access</p>
                 </div>
-                <button
-                    onClick={() => setShowModal(true)}
-                    className="btn-primary flex items-center gap-2"
-                >
-                    <Plus className="w-4 h-4" />
-                    Add Receptionist
-                </button>
+                <div className="flex items-center gap-3">
+                    <button onClick={handleDownloadData} disabled={downloading} className="btn-secondary flex items-center gap-2" title="Download all receptionist data as CSV">
+                        {downloading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
+                        {downloading ? 'Downloading...' : 'Download All'}
+                    </button>
+                    <button
+                        onClick={() => setShowModal(true)}
+                        className="btn-primary flex items-center gap-2"
+                    >
+                        <Plus className="w-4 h-4" />
+                        Add Receptionist
+                    </button>
+                </div>
             </div>
 
             {/* Search Bar */}
-            <div className="card p-4 mb-6">
-                <div className="relative">
-                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                    <input
-                        type="text"
-                        placeholder="Search by name, email, or phone..."
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                        className="input pl-10 w-full"
-                    />
+                <div className="search-form mb-6">
+                    <div className="search-input-wrapper">
+                        <Search size={16} />
+                        <input
+                            type="text"
+                            placeholder="Search by name, email, or phone..."
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                        />
+                    </div>
                 </div>
-            </div>
 
             {/* Receptionists Table */}
             <div className="card overflow-hidden">
@@ -160,7 +240,14 @@ const ReceptionistManagement = () => {
                                 ) : (
                                     filteredReceptionists.map((receptionist) => (
                                         <tr key={receptionist._id}>
-                                            <td className="font-medium">{receptionist.name}</td>
+                                            <td>
+                                                <button
+                                                    onClick={() => handleViewDetail(receptionist)}
+                                                    className="font-medium text-primary-600 hover:text-primary-800 hover:underline text-left"
+                                                >
+                                                    {receptionist.name}
+                                                </button>
+                                            </td>
                                             <td>{receptionist.email}</td>
                                             <td>{receptionist.phone}</td>
                                             <td>
@@ -276,6 +363,148 @@ const ReceptionistManagement = () => {
                                 </button>
                             </div>
                         </form>
+                    </div>
+                </div>
+            )}
+
+            {/* Detail Modal */}
+            {showDetailModal && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+                    <div className="bg-white w-full max-h-[90vh] overflow-y-auto p-6" style={{ maxWidth: '60rem' }}>
+                        <div className="flex items-center justify-between mb-6">
+                            <h2 className="text-xl font-bold text-gray-900">Receptionist Details</h2>
+                            <button onClick={() => { setShowDetailModal(false); setDetailData(null); }} className="text-gray-400 hover:text-gray-600">
+                                <X className="w-6 h-6" />
+                            </button>
+                        </div>
+
+                        {detailLoading ? (
+                            <div className="p-8 text-center">
+                                <Loader2 className="w-8 h-8 animate-spin mx-auto text-primary-600" />
+                                <p className="text-gray-500 mt-2">Loading details...</p>
+                            </div>
+                        ) : detailData ? (
+                            <div className="space-y-6">
+                                {/* Profile Photo */}
+                                {detailData.receptionistProfile?.profilePhoto && (
+                                    <div className="flex justify-center">
+                                        <img
+                                            src={detailData.receptionistProfile.profilePhoto}
+                                            alt={detailData.name}
+                                            className="w-28 h-28 rounded-full object-cover border-4 border-primary-100 shadow"
+                                        />
+                                    </div>
+                                )}
+
+                                {/* Personal Information */}
+                                <div>
+                                    <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-3 flex items-center gap-2">
+                                        <User className="w-4 h-4" /> Personal Information
+                                    </h3>
+                                    <div className="bg-gray-50 rounded-lg p-4 grid grid-cols-4 gap-4">
+                                        <div>
+                                            <p className="text-xs text-gray-500">Name</p>
+                                            <p className="font-medium text-gray-900">{detailData.name}</p>
+                                        </div>
+                                        <div>
+                                            <p className="text-xs text-gray-500">Email</p>
+                                            <p className="font-medium text-gray-900">{detailData.email}</p>
+                                        </div>
+                                        <div>
+                                            <p className="text-xs text-gray-500">Phone</p>
+                                            <p className="font-medium text-gray-900">{detailData.phone}</p>
+                                        </div>
+                                        <div>
+                                            <p className="text-xs text-gray-500">Gender</p>
+                                            <p className="font-medium text-gray-900">{detailData.receptionistProfile?.gender || 'Not set'}</p>
+                                        </div>
+                                        <div>
+                                            <p className="text-xs text-gray-500">Date of Birth</p>
+                                            <p className="font-medium text-gray-900">{detailData.receptionistProfile?.dateOfBirth ? new Date(detailData.receptionistProfile.dateOfBirth).toLocaleDateString() : 'Not set'}</p>
+                                        </div>
+                                        <div>
+                                            <p className="text-xs text-gray-500">Status</p>
+                                            <span className={`badge ${detailData.isActive ? 'badge-success' : 'badge-danger'}`}>
+                                                {detailData.isActive ? 'Active' : 'Inactive'}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Employment Details */}
+                                <div>
+                                    <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-3 flex items-center gap-2">
+                                        <Briefcase className="w-4 h-4" /> Employment Details
+                                    </h3>
+                                    <div className="bg-gray-50 rounded-lg p-4 grid grid-cols-4 gap-4">
+                                        <div>
+                                            <p className="text-xs text-gray-500">Shift</p>
+                                            <p className="font-medium text-gray-900">{detailData.receptionistProfile?.shift || 'Not set'}</p>
+                                        </div>
+                                        <div>
+                                            <p className="text-xs text-gray-500">Joining Date</p>
+                                            <p className="font-medium text-gray-900">{detailData.receptionistProfile?.joiningDate ? new Date(detailData.receptionistProfile.joiningDate).toLocaleDateString() : 'Not set'}</p>
+                                        </div>
+                                        <div>
+                                            <p className="text-xs text-gray-500">Experience</p>
+                                            <p className="font-medium text-gray-900">{detailData.receptionistProfile?.experience ? `${detailData.receptionistProfile.experience} year(s)` : 'Not set'}</p>
+                                        </div>
+                                        <div>
+                                            <p className="text-xs text-gray-500">Education Level</p>
+                                            <p className="font-medium text-gray-900">{detailData.receptionistProfile?.educationLevel || 'Not set'}</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* ID Proof */}
+                                <div>
+                                    <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-3 flex items-center gap-2">
+                                        <Shield className="w-4 h-4" /> ID Proof
+                                    </h3>
+                                    <div className="bg-gray-50 rounded-lg p-4 grid grid-cols-4 gap-4">
+                                        <div>
+                                            <p className="text-xs text-gray-500">ID Proof Type</p>
+                                            <p className="font-medium text-gray-900">{detailData.receptionistProfile?.idProofType || 'Not set'}</p>
+                                        </div>
+                                        <div>
+                                            <p className="text-xs text-gray-500">ID Proof Number</p>
+                                            <p className="font-medium text-gray-900">{detailData.receptionistProfile?.idProofNumber || 'Not set'}</p>
+                                        </div>
+                                    </div>
+                                    {detailData.receptionistProfile?.idProofDocument && (
+                                        <div className="mt-3">
+                                            <p className="text-xs text-gray-500 mb-2">ID Proof Document</p>
+                                            <img
+                                                src={detailData.receptionistProfile.idProofDocument}
+                                                alt="ID Proof"
+                                                className="max-w-xs rounded-lg border border-gray-200 shadow-sm"
+                                            />
+                                        </div>
+                                    )}
+                                </div>
+
+                                {/* Digital Signature */}
+                                {detailData.receptionistProfile?.digitalSignature && (
+                                    <div>
+                                        <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-3">Digital Signature</h3>
+                                        <div className="bg-gray-50 rounded-lg p-4">
+                                            <img
+                                                src={detailData.receptionistProfile.digitalSignature}
+                                                alt="Digital Signature"
+                                                className="max-w-[200px] rounded border border-gray-200"
+                                            />
+                                        </div>
+                                    </div>
+                                )}
+
+                                <div className="text-xs text-gray-400 pt-2">
+                                    Account created: {detailData.createdAt ? new Date(detailData.createdAt).toLocaleString() : 'N/A'}
+                                    {detailData.lastLogin && ` | Last login: ${new Date(detailData.lastLogin).toLocaleString()}`}
+                                </div>
+                            </div>
+                        ) : (
+                            <p className="text-gray-500 text-center py-8">No data available</p>
+                        )}
                     </div>
                 </div>
             )}

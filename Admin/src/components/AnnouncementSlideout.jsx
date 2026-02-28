@@ -20,8 +20,8 @@ const AnnouncementSlideout = ({ onAnnouncementClick }) => {
             const announcementsList = response.announcements || [];
             setAnnouncements(announcementsList);
 
-            // Check unread announcements from localStorage
-            const readAnnouncements = JSON.parse(localStorage.getItem('readAnnouncements') || '[]');
+            // Check unread announcements from sessionStorage
+            const readAnnouncements = JSON.parse(sessionStorage.getItem('readAnnouncements') || '[]');
             const unread = announcementsList.filter(a => !readAnnouncements.includes(a._id));
             setUnreadCount(unread.length);
         } catch (error) {
@@ -36,7 +36,7 @@ const AnnouncementSlideout = ({ onAnnouncementClick }) => {
         if (!isOpen) {
             // Mark all as read when opening
             const allIds = announcements.map(a => a._id);
-            localStorage.setItem('readAnnouncements', JSON.stringify(allIds));
+            sessionStorage.setItem('readAnnouncements', JSON.stringify(allIds));
             setUnreadCount(0);
         }
     };

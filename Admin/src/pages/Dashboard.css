@@ -59,10 +59,10 @@
     background: #ffffff;
     border: 1px solid #e5e7eb;
     border-radius: 4px;
-    padding: 20px;
+    padding: 1rem;
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 10px;
     transition: box-shadow 0.2s, transform 0.2s, border-color 0.2s;
     position: relative;
     overflow: visible;
@@ -275,6 +275,9 @@
 /* ── Department Carousel ── */
 .dept-carousel {
     position: relative;
+    background: #f8f8f8fc;
+    padding: 2rem;
+    border-radius: 7.5px;
 }
 
 .dept-carousel-viewport {
@@ -337,7 +340,7 @@
 .dept-stat {
     text-align: center;
     padding: 10px 4px;
-    background: #f9fafb;
+    background: #ffffff;
     border-radius: 10px;
     border: 1px solid #f3f4f6;
 }
@@ -502,7 +505,6 @@
 
 .dash-table .patient-cell {
     display: flex;
-    align-items: center;
     gap: 10px;
 }
 
@@ -680,8 +682,8 @@
     }
 
     .dsb-stat-card {
-        padding: 16px;
-        gap: 10px;
+        padding: 0.75rem;
+        gap: 9px;
     }
 
     .stat-card-value {
@@ -738,8 +740,8 @@
     }
 
     .dsb-stat-card {
-        padding: 14px;
-        gap: 8px;
+        padding: 0.5rem;
+        gap: 6px;
     }
 
     .stat-card-value {

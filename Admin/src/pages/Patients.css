@@ -11,7 +11,7 @@
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    margin-bottom: 24px;
+    margin-bottom: 1rem;
 }
 
 .patients-title h1 {
@@ -316,26 +316,23 @@
     backdrop-filter: blur(2px);
 }
 
-.modal-content {
+.patient-modal-content {
     background: white;
-    border-radius: 14px;
-    max-width: 680px;
-    width: 92%;
     max-height: 85vh;
     display: flex;
     flex-direction: column;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
 }
 
-.modal-header {
+.patient-modal-header {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    padding: 20px 24px;
+    padding: 1rem 1.5rem;
     border-bottom: 1px solid #e5e7eb;
 }
 
-.modal-header h2 {
+.patient-modal-header h2 {
     font-size: 20px;
     font-weight: 700;
     color: #1f2937;
@@ -389,8 +386,8 @@
     color: #374151;
 }
 
-.modal-body {
-    padding: 20px 24px;
+.patient-modal-body {
+    padding: 1rem;
     overflow-y: auto;
     flex: 1;
 }
@@ -655,5 +652,298 @@
     .patients-table th:nth-child(6),
     .patients-table td:nth-child(6) {
         display: none;
+    }
+}
+
+/* ============================================
+   HEADER ACTIONS
+   ============================================ */
+.patients-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* ============================================
+   PATIENT DOWNLOAD FILTER MODAL
+   ============================================ */
+
+.pat-dl-trigger-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    background: #111827;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    letter-spacing: 0.02em;
+    transition: background 0.15s, box-shadow 0.15s;
+}
+.pat-dl-trigger-btn:hover {
+    background: #1f2937;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+/* Overlay */
+.pat-dl-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    backdrop-filter: blur(2px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1100;
+    animation: patDlFadeIn 0.15s ease-out;
+}
+
+@keyframes patDlFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes patDlSlideUp {
+    from { opacity: 0; transform: translateY(20px) scale(0.98); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* Modal */
+.pat-dl-modal {
+    background: #fff;
+    width: 480px;
+    max-width: 94vw;
+    max-height: 90vh;
+    overflow-y: auto;
+    border-radius: 4px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.18), 0 0 0 1px rgba(0,0,0,0.05);
+    animation: patDlSlideUp 0.2s ease-out;
+}
+
+/* Header */
+.pat-dl-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 24px 16px;
+    border-bottom: 1px solid #e5e7eb;
+}
+.pat-dl-header-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #111827;
+}
+.pat-dl-header-left svg {
+    color: #3b82f6;
+}
+.pat-dl-header-left h2 {
+    font-size: 16px;
+    font-weight: 700;
+    color: #111827;
+    margin: 0;
+    line-height: 1.2;
+}
+.pat-dl-header-left p {
+    font-size: 12px;
+    color: #6b7280;
+    margin: 2px 0 0;
+}
+.pat-dl-close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border: 1px solid #e5e7eb;
+    background: #fff;
+    border-radius: 4px;
+    cursor: pointer;
+    color: #6b7280;
+    transition: all 0.15s;
+}
+.pat-dl-close:hover {
+    background: #f3f4f6;
+    color: #111827;
+    border-color: #d1d5db;
+}
+
+/* Body */
+.pat-dl-body {
+    padding: 20px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+}
+
+/* Section */
+.pat-dl-section {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+.pat-dl-label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #6b7280;
+}
+
+/* Chip row */
+.pat-dl-chip-row {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+.pat-dl-chip {
+    padding: 7px 14px;
+    border: 1px solid #e5e7eb;
+    background: #fff;
+    border-radius: 4px;
+    font-size: 12.5px;
+    font-weight: 500;
+    color: #374151;
+    cursor: pointer;
+    transition: all 0.15s;
+}
+.pat-dl-chip:hover {
+    border-color: #3b82f6;
+    color: #3b82f6;
+    background: #eff6ff;
+}
+.pat-dl-chip.active {
+    background: #111827;
+    color: #fff;
+    border-color: #111827;
+}
+
+/* Custom age range */
+.pat-dl-age-range {
+    display: flex;
+    align-items: flex-end;
+    gap: 10px;
+    margin-top: 6px;
+}
+.pat-dl-age-field {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+.pat-dl-age-field label {
+    font-size: 11px;
+    font-weight: 600;
+    color: #9ca3af;
+}
+.pat-dl-age-field input {
+    padding: 8px 10px;
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+    font-size: 13px;
+    color: #374151;
+    outline: none;
+    transition: border-color 0.15s;
+    width: 100%;
+}
+.pat-dl-age-field input:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 2px rgba(59,130,246,0.08);
+}
+.pat-dl-age-sep {
+    color: #d1d5db;
+    font-size: 16px;
+    padding-bottom: 8px;
+}
+
+/* Footer */
+.pat-dl-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 24px;
+    border-top: 1px solid #e5e7eb;
+    background: #fafafa;
+}
+.pat-dl-clear-btn {
+    padding: 9px 18px;
+    border: 1px solid #e5e7eb;
+    background: #fff;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #6b7280;
+    cursor: pointer;
+    transition: all 0.15s;
+}
+.pat-dl-clear-btn:hover {
+    border-color: #ef4444;
+    color: #ef4444;
+    background: #fef2f2;
+}
+.pat-dl-download-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 22px;
+    background: #111827;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    min-width: 155px;
+    justify-content: center;
+}
+.pat-dl-download-btn:hover:not(:disabled) {
+    background: #1f2937;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+}
+.pat-dl-download-btn:disabled {
+    cursor: not-allowed;
+}
+.pat-dl-download-btn.loading {
+    background: #3b82f6;
+}
+.pat-dl-download-btn.done {
+    background: #059669;
+}
+
+/* Spin animation */
+@keyframes patDlSpin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+.pat-dl-spin {
+    animation: patDlSpin 0.8s linear infinite;
+}
+
+/* Responsive */
+@media (max-width: 520px) {
+    .pat-dl-modal {
+        width: 100%;
+        margin: 12px;
+    }
+    .pat-dl-age-range {
+        flex-direction: column;
+    }
+    .pat-dl-age-sep {
+        display: none;
+    }
+    .pat-dl-footer {
+        flex-direction: column;
+        gap: 10px;
+    }
+    .pat-dl-clear-btn, .pat-dl-download-btn {
+        width: 100%;
+        justify-content: center;
+    }
+    .patients-header-actions {
+        flex-direction: column;
     }
 }

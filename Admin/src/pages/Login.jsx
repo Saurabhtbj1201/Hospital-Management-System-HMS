@@ -119,6 +119,8 @@ const Login = () => {
             {/* Site Update Banner */}
             <SiteUpdateBanner />
 
+            {/* Login Content */}
+            <div className="login-content">
             {/* Left Side - Form */}
             <div className="login-left">
                 <div className="login-form-container">
@@ -306,6 +308,7 @@ const Login = () => {
                 <button className="carousel-nav next" onClick={nextSlide} aria-label="Next testimonial">
                     <FaChevronRight />
                 </button>
+            </div>
             </div>
 
             {/* Support Modal */}

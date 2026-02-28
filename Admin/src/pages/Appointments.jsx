@@ -1,8 +1,9 @@
 import { useState, useEffect, useRef } from 'react';
-import { Calendar, Search, Edit2, Eye, UserPlus, Check, X, Clock, RefreshCw, XCircle, CheckCircle, UserMinus, Printer } from 'lucide-react';
+import { Calendar, Search, Edit2, Eye, UserPlus, Check, X, Clock, RefreshCw, XCircle, CheckCircle, UserMinus, Printer, Download, Filter, ChevronDown, Loader2 } from 'lucide-react';
 import QRCode from 'qrcode';
 import { appointmentsAPI, doctorsAPI, departmentsAPI, invoiceTemplateAPI } from '../services/api';
 import { useAuth } from '../context/AuthContext';
+import { toast } from 'sonner';
 import './Appointments.css';
 
 const Appointments = () => {
@@ -25,6 +26,7 @@ const Appointments = () => {
     const [modalType, setModalType] = useState('');
     const [hospitalTemplate, setHospitalTemplate] = useState(null);
     const [templateLoading, setTemplateLoading] = useState(false);
+    const [showDownloadModal, setShowDownloadModal] = useState(false);
 
     useEffect(() => {
         fetchAppointments();
@@ -180,6 +182,10 @@ const Appointments = () => {
                     <h1>{isDoctor ? 'My Appointments' : 'Appointments Management'}</h1>
                     <p>{isDoctor ? 'View appointments assigned to you' : 'View and manage all patient appointments'}</p>
                 </div>
+                <button className="dl-trigger-btn" onClick={() => setShowDownloadModal(true)}>
+                    <Download size={16} />
+                    Download
+                </button>
             </div>
 
             <div className="appointments-filters">
@@ -398,6 +404,15 @@ const Appointments = () => {
                 </>
             )}
 
+            {showDownloadModal && (
+                <DownloadFilterModal
+                    doctors={doctors}
+                    departments={departments}
+                    isDoctor={isDoctor}
+                    onClose={() => setShowDownloadModal(false)}
+                />
+            )}
+
             {showModal && <AppointmentModal
                 appointment={selectedAppointment}
                 type={modalType}
@@ -409,6 +424,257 @@ const Appointments = () => {
                 onAssignDoctor={handleAssignDoctor}
                 onUpdate={handleUpdate}
             />}
+        </div>
+    );
+};
+
+/* ================================================================
+   DOWNLOAD FILTER MODAL
+   ================================================================ */
+const DownloadFilterModal = ({ doctors, departments, isDoctor, onClose }) => {
+    const [dateRange, setDateRange] = useState('this_month');
+    const [customFrom, setCustomFrom] = useState('');
+    const [customTo, setCustomTo] = useState('');
+    const [status, setStatus] = useState('');
+    const [department, setDepartment] = useState('');
+    const [doctor, setDoctor] = useState('');
+    const [downloading, setDownloading] = useState(false);
+    const [downloadDone, setDownloadDone] = useState(false);
+
+    const getDateBounds = () => {
+        const now = new Date();
+        let from, to;
+        to = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59);
+
+        switch (dateRange) {
+            case 'this_month':
+                from = new Date(now.getFullYear(), now.getMonth(), 1);
+                break;
+            case 'past_2':
+                from = new Date(now.getFullYear(), now.getMonth() - 2, 1);
+                break;
+            case 'past_3':
+                from = new Date(now.getFullYear(), now.getMonth() - 3, 1);
+                break;
+            case 'custom':
+                from = customFrom ? new Date(customFrom) : null;
+                to = customTo ? new Date(customTo + 'T23:59:59') : to;
+                break;
+            default:
+                from = null;
+        }
+        return { from, to };
+    };
+
+    const handleClear = () => {
+        setDateRange('this_month');
+        setCustomFrom('');
+        setCustomTo('');
+        setStatus('');
+        setDepartment('');
+        setDoctor('');
+    };
+
+    const handleDownload = async () => {
+        try {
+            setDownloading(true);
+            setDownloadDone(false);
+
+            const { from, to } = getDateBounds();
+            const params = {
+                page: 1,
+                limit: 10000,
+                status: status || undefined,
+                department: department || undefined,
+                doctor: doctor || undefined,
+                dateFrom: from ? from.toISOString() : undefined,
+                dateTo: to ? to.toISOString() : undefined,
+            };
+
+            const response = isDoctor
+                ? await appointmentsAPI.getMyAppointments(params)
+                : await appointmentsAPI.getAll(params);
+
+            const data = response.data || response || [];
+            if (!data.length) {
+                toast.error('No appointments found for the selected filters');
+                setDownloading(false);
+                return;
+            }
+
+            // Build CSV
+            const headers = ['Appointment ID', 'Patient Name', 'Email', 'Mobile', 'Date', 'Time', 'Department', 'Assigned Doctor', 'Status', 'Visit Type', 'Primary Concern'];
+            const rows = data.map(a => [
+                a.appointmentId || '',
+                a.fullName || '',
+                a.emailAddress || '',
+                a.mobileNumber || '',
+                a.appointmentDate ? new Date(a.appointmentDate).toLocaleDateString('en-IN') : '',
+                a.appointmentTime || '',
+                a.department || '',
+                a.doctorAssigned?.user?.name || a.doctorAssigned?.name || 'Not Assigned',
+                a.appointmentStatus || '',
+                a.visitType || '',
+                a.primaryConcern || ''
+            ]);
+
+            const csvContent = [headers, ...rows]
+                .map(r => r.map(c => `"${String(c).replace(/"/g, '""')}"`).join(','))
+                .join('\n');
+
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `appointments_${new Date().toISOString().slice(0, 10)}.csv`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+
+            setDownloadDone(true);
+            toast.success(`Downloaded ${data.length} appointments`);
+            setTimeout(() => {
+                setDownloading(false);
+                setDownloadDone(false);
+                onClose();
+            }, 1200);
+        } catch (err) {
+            console.error('Download error:', err);
+            toast.error('Failed to download appointments');
+            setDownloading(false);
+        }
+    };
+
+    const filteredDoctors = department
+        ? doctors.filter(doc => {
+            if (doc.department?.name === department) return true;
+            if (Array.isArray(doc.departments) && doc.departments.some(d => d?.name === department)) return true;
+            return false;
+        })
+        : doctors;
+
+    return (
+        <div className="dl-overlay" onClick={onClose}>
+            <div className="dl-modal" onClick={e => e.stopPropagation()}>
+                {/* Header */}
+                <div className="dl-header">
+                    <div className="dl-header-left">
+                        <Filter size={18} />
+                        <div>
+                            <h2>Download Appointments</h2>
+                            <p>Apply filters and export as CSV</p>
+                        </div>
+                    </div>
+                    <button className="dl-close" onClick={onClose}>
+                        <X size={18} />
+                    </button>
+                </div>
+
+                {/* Body */}
+                <div className="dl-body">
+                    {/* Date Range */}
+                    <div className="dl-section">
+                        <label className="dl-label">Date Range</label>
+                        <div className="dl-chip-row">
+                            {[
+                                { key: 'this_month', label: 'This Month' },
+                                { key: 'past_2', label: 'Past 2 Months' },
+                                { key: 'past_3', label: 'Past 3 Months' },
+                                { key: 'custom', label: 'Custom' },
+                            ].map(opt => (
+                                <button
+                                    key={opt.key}
+                                    className={`dl-chip ${dateRange === opt.key ? 'active' : ''}`}
+                                    onClick={() => setDateRange(opt.key)}
+                                >
+                                    {opt.label}
+                                </button>
+                            ))}
+                        </div>
+                        {dateRange === 'custom' && (
+                            <div className="dl-date-range">
+                                <div className="dl-date-field">
+                                    <label>From</label>
+                                    <input type="date" value={customFrom} onChange={e => setCustomFrom(e.target.value)} />
+                                </div>
+                                <span className="dl-date-sep">—</span>
+                                <div className="dl-date-field">
+                                    <label>To</label>
+                                    <input type="date" value={customTo} onChange={e => setCustomTo(e.target.value)} />
+                                </div>
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Status */}
+                    <div className="dl-section">
+                        <label className="dl-label">Status</label>
+                        <div className="dl-select-wrapper">
+                            <select value={status} onChange={e => setStatus(e.target.value)}>
+                                <option value="">All Statuses</option>
+                                <option value="Pending">Pending</option>
+                                <option value="Confirmed">Confirmed</option>
+                                <option value="Completed">Completed</option>
+                                <option value="Cancelled">Cancelled</option>
+                            </select>
+                            <ChevronDown size={14} className="dl-select-icon" />
+                        </div>
+                    </div>
+
+                    {/* Department */}
+                    <div className="dl-section">
+                        <label className="dl-label">Department</label>
+                        <div className="dl-select-wrapper">
+                            <select value={department} onChange={e => { setDepartment(e.target.value); setDoctor(''); }}>
+                                <option value="">All Departments</option>
+                                {departments.map(d => (
+                                    <option key={d._id} value={d.name}>{d.name}</option>
+                                ))}
+                            </select>
+                            <ChevronDown size={14} className="dl-select-icon" />
+                        </div>
+                    </div>
+
+                    {/* Assigned Doctor */}
+                    {!isDoctor && (
+                        <div className="dl-section">
+                            <label className="dl-label">Assigned Doctor</label>
+                            <div className="dl-select-wrapper">
+                                <select value={doctor} onChange={e => setDoctor(e.target.value)}>
+                                    <option value="">All Doctors</option>
+                                    {filteredDoctors.map(doc => (
+                                        <option key={doc._id} value={doc._id}>
+                                            {doc.user?.name || doc.name || 'Unknown'}
+                                        </option>
+                                    ))}
+                                </select>
+                                <ChevronDown size={14} className="dl-select-icon" />
+                            </div>
+                        </div>
+                    )}
+                </div>
+
+                {/* Footer */}
+                <div className="dl-footer">
+                    <button className="dl-clear-btn" onClick={handleClear}>Clear Filters</button>
+                    <button
+                        className={`dl-download-btn ${downloading ? (downloadDone ? 'done' : 'loading') : ''}`}
+                        onClick={handleDownload}
+                        disabled={downloading}
+                    >
+                        {downloading ? (
+                            downloadDone ? (
+                                <><CheckCircle size={16} /> Done!</>
+                            ) : (
+                                <><Loader2 size={16} className="dl-spin" /> Downloading...</>
+                            )
+                        ) : (
+                            <><Download size={16} /> Download CSV</>
+                        )}
+                    </button>
+                </div>
+            </div>
         </div>
     );
 };

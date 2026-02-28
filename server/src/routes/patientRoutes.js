@@ -95,6 +95,92 @@ router.get('/public-appointments/list', protect, authorize('Admin', 'Receptionis
     }
 });
 
+// Download patients with filters (MUST be before :patientId route)
+router.get('/public-appointments/download', protect, authorize('Admin', 'Receptionist'), async (req, res) => {
+    try {
+        const { gender, ageMin, ageMax, visitType } = req.query;
+
+        let matchQuery = {};
+
+        if (gender) {
+            matchQuery.gender = gender;
+        }
+
+        // Age filtering
+        if (ageMin || ageMax) {
+            matchQuery.age = {};
+            if (ageMin) matchQuery.age.$gte = parseInt(ageMin);
+            if (ageMax) matchQuery.age.$lte = parseInt(ageMax);
+        }
+
+        // Visit type filtering
+        if (visitType) {
+            matchQuery.visitType = visitType;
+        }
+
+        const patients = await PublicAppointment.aggregate([
+            { $match: matchQuery },
+            { $sort: { appointmentDate: -1 } },
+            {
+                $group: {
+                    _id: '$patientId',
+                    patientId: { $first: '$patientId' },
+                    fullName: { $last: '$fullName' },
+                    emailAddress: { $last: '$emailAddress' },
+                    mobileNumber: { $last: '$mobileNumber' },
+                    gender: { $last: '$gender' },
+                    age: { $last: '$age' },
+                    totalAppointments: { $sum: 1 },
+                    appointments: {
+                        $push: {
+                            appointmentId: '$appointmentId',
+                            appointmentDate: '$appointmentDate',
+                            appointmentTime: '$appointmentTime',
+                            appointmentStatus: '$appointmentStatus',
+                            department: '$department',
+                            visitType: '$visitType',
+                            doctorAssigned: '$doctorAssigned',
+                            reasonForVisit: '$reasonForVisit',
+                            primaryConcern: '$primaryConcern',
+                            cancelReason: '$cancelReason',
+                        }
+                    }
+                }
+            },
+            { $sort: { 'appointments.0.appointmentDate': -1 } }
+        ]);
+
+        // Populate doctor names
+        const doctorIds = [];
+        patients.forEach(p => {
+            p.appointments.forEach(a => {
+                if (a.doctorAssigned) doctorIds.push(a.doctorAssigned);
+            });
+        });
+        const doctors = await Doctor.find({ _id: { $in: doctorIds } }).populate('user', 'name');
+        const doctorMap = {};
+        doctors.forEach(d => {
+            doctorMap[d._id.toString()] = d.user?.name || 'Unknown';
+        });
+
+        // Attach doctor names
+        patients.forEach(p => {
+            p.appointments.forEach(a => {
+                a.doctorName = a.doctorAssigned ? (doctorMap[a.doctorAssigned.toString()] || 'Unknown') : 'Not Assigned';
+            });
+        });
+
+        res.json({
+            success: true,
+            data: patients,
+            total: patients.length
+        });
+    } catch (error) {
+        console.error('Download patients error:', error);
+        res.status(500).json({ success: false, message: error.message });
+    }
+});
+
 // Get patient details by ID (with all appointments)
 router.get('/public-appointments/:patientId', protect, authorize('Admin', 'Receptionist', 'Doctor'), async (req, res) => {
     try {

@@ -219,6 +219,89 @@ router.post('/generate/:appointmentId', protect, authorize('Admin', 'Receptionis
     }
 });
 
+// ─── GET /bills/insights ─────────────────────────────────────────────────────
+// Billing insights with filters + analytics + download
+router.get('/insights', protect, authorize('Admin', 'Receptionist'), async (req, res) => {
+    try {
+        const { dateFrom, dateTo, department, status } = req.query;
+
+        // Build appointment query
+        let appointmentQuery = {};
+        if (dateFrom || dateTo) {
+            appointmentQuery.appointmentDate = {};
+            if (dateFrom) appointmentQuery.appointmentDate.$gte = new Date(dateFrom);
+            if (dateTo) appointmentQuery.appointmentDate.$lte = new Date(dateTo);
+        }
+        if (department) appointmentQuery.department = department;
+
+        const appointments = await PublicAppointment.find(appointmentQuery)
+            .populate({
+                path: 'doctorAssigned',
+                populate: { path: 'user', select: 'name' },
+                select: 'fees user'
+            })
+            .sort({ appointmentDate: -1 });
+
+        // Fetch all bills and create lookup map
+        const bills = await Bill.find({});
+        const billMap = {};
+        bills.forEach(bill => {
+            if (bill.publicAppointment) {
+                billMap[bill.publicAppointment.toString()] = bill;
+            }
+        });
+
+        // Merge — only appointments that have invoices
+        let merged = appointments
+            .filter(apt => billMap[apt._id.toString()])
+            .map(apt => {
+                const bill = billMap[apt._id.toString()];
+                return {
+                    fullName: apt.fullName,
+                    patientId: apt.patientId,
+                    appointmentId: apt.appointmentId,
+                    appointmentDate: apt.appointmentDate,
+                    department: apt.department,
+                    billNumber: bill.billNumber,
+                    totalAmount: bill.totalAmount,
+                    paidAmount: bill.paidAmount || 0,
+                    dueAmount: bill.dueAmount || 0,
+                    paymentStatus: bill.paymentStatus,
+                    paymentMethod: bill.paymentMethod || '',
+                };
+            });
+
+        // Filter by payment status
+        if (status) {
+            merged = merged.filter(item => item.paymentStatus.toLowerCase() === status.toLowerCase());
+        }
+
+        // Analytics summary
+        const analytics = {
+            totalInvoices: merged.length,
+            totalRevenue: merged.reduce((sum, m) => sum + m.totalAmount, 0),
+            totalPaid: merged.reduce((sum, m) => sum + m.paidAmount, 0),
+            totalDue: merged.reduce((sum, m) => sum + m.dueAmount, 0),
+            statusBreakdown: {
+                paid: merged.filter(m => m.paymentStatus === 'Paid').length,
+                pending: merged.filter(m => m.paymentStatus === 'Pending').length,
+                due: merged.filter(m => m.paymentStatus === 'Due').length,
+                partial: merged.filter(m => m.paymentStatus === 'Partial').length,
+            }
+        };
+
+        res.json({
+            success: true,
+            data: merged,
+            analytics,
+            total: merged.length
+        });
+    } catch (error) {
+        console.error('Billing insights error:', error);
+        res.status(500).json({ success: false, message: error.message });
+    }
+});
+
 // ─── GET /bills/:id ────────────────────────────────────────────────────────
 // Get full bill details with appointment info
 router.get('/:id', protect, async (req, res) => {

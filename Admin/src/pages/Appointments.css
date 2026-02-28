@@ -6,7 +6,7 @@
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    margin-bottom: 24px;
+    margin-bottom: 1rem;
 }
 
 .appointments-title h1 {
@@ -792,6 +792,318 @@ tbody tr:hover {
         text-align: center;
     }
     .apt-tpl-contacts {
+        justify-content: center;
+    }
+}
+
+/* ═══════════════════════════════════════════════
+   DOWNLOAD FILTER MODAL
+   ═══════════════════════════════════════════════ */
+
+/* Trigger button in header */
+.dl-trigger-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    background: #111827;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    letter-spacing: 0.02em;
+    transition: background 0.15s, box-shadow 0.15s;
+}
+.dl-trigger-btn:hover {
+    background: #1f2937;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+/* Overlay */
+.dl-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    backdrop-filter: blur(2px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1100;
+    animation: dlFadeIn 0.15s ease-out;
+}
+
+@keyframes dlFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes dlSlideUp {
+    from { opacity: 0; transform: translateY(20px) scale(0.98); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* Modal */
+.dl-modal {
+    background: #fff;
+    width: 480px;
+    max-width: 94vw;
+    max-height: 90vh;
+    overflow-y: auto;
+    border-radius: 4px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.18), 0 0 0 1px rgba(0,0,0,0.05);
+    animation: dlSlideUp 0.2s ease-out;
+}
+
+/* Header */
+.dl-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 24px 16px;
+    border-bottom: 1px solid #e5e7eb;
+}
+.dl-header-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #111827;
+}
+.dl-header-left svg {
+    color: #3b82f6;
+}
+.dl-header-left h2 {
+    font-size: 16px;
+    font-weight: 700;
+    color: #111827;
+    margin: 0;
+    line-height: 1.2;
+}
+.dl-header-left p {
+    font-size: 12px;
+    color: #6b7280;
+    margin: 2px 0 0;
+}
+.dl-close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border: 1px solid #e5e7eb;
+    background: #fff;
+    border-radius: 4px;
+    cursor: pointer;
+    color: #6b7280;
+    transition: all 0.15s;
+}
+.dl-close:hover {
+    background: #f3f4f6;
+    color: #111827;
+    border-color: #d1d5db;
+}
+
+/* Body */
+.dl-body {
+    padding: 20px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Section */
+.dl-section {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+.dl-label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #6b7280;
+}
+
+/* Chip row */
+.dl-chip-row {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+.dl-chip {
+    padding: 7px 14px;
+    border: 1px solid #e5e7eb;
+    background: #fff;
+    border-radius: 4px;
+    font-size: 12.5px;
+    font-weight: 500;
+    color: #374151;
+    cursor: pointer;
+    transition: all 0.15s;
+}
+.dl-chip:hover {
+    border-color: #3b82f6;
+    color: #3b82f6;
+    background: #eff6ff;
+}
+.dl-chip.active {
+    background: #111827;
+    color: #fff;
+    border-color: #111827;
+}
+
+/* Custom date range */
+.dl-date-range {
+    display: flex;
+    align-items: flex-end;
+    gap: 10px;
+    margin-top: 6px;
+}
+.dl-date-field {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+.dl-date-field label {
+    font-size: 11px;
+    font-weight: 600;
+    color: #9ca3af;
+}
+.dl-date-field input {
+    padding: 8px 10px;
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+    font-size: 13px;
+    color: #374151;
+    outline: none;
+    transition: border-color 0.15s;
+}
+.dl-date-field input:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 2px rgba(59,130,246,0.08);
+}
+.dl-date-sep {
+    color: #d1d5db;
+    font-size: 16px;
+    padding-bottom: 8px;
+}
+
+/* Select wrapper */
+.dl-select-wrapper {
+    position: relative;
+}
+.dl-select-wrapper select {
+    width: 100%;
+    padding: 9px 32px 9px 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #374151;
+    background: #fff;
+    appearance: none;
+    outline: none;
+    cursor: pointer;
+    transition: border-color 0.15s;
+}
+.dl-select-wrapper select:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 2px rgba(59,130,246,0.08);
+}
+.dl-select-icon {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #9ca3af;
+    pointer-events: none;
+}
+
+/* Footer */
+.dl-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 24px;
+    border-top: 1px solid #e5e7eb;
+    background: #fafafa;
+}
+.dl-clear-btn {
+    padding: 9px 18px;
+    border: 1px solid #e5e7eb;
+    background: #fff;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #6b7280;
+    cursor: pointer;
+    transition: all 0.15s;
+}
+.dl-clear-btn:hover {
+    border-color: #ef4444;
+    color: #ef4444;
+    background: #fef2f2;
+}
+.dl-download-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 22px;
+    background: #111827;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    min-width: 155px;
+    justify-content: center;
+}
+.dl-download-btn:hover:not(:disabled) {
+    background: #1f2937;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+}
+.dl-download-btn:disabled {
+    cursor: not-allowed;
+}
+.dl-download-btn.loading {
+    background: #3b82f6;
+}
+.dl-download-btn.done {
+    background: #059669;
+}
+
+/* Spin animation */
+@keyframes dlSpin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+.dl-spin {
+    animation: dlSpin 0.8s linear infinite;
+}
+
+/* Responsive */
+@media (max-width: 520px) {
+    .dl-modal {
+        width: 100%;
+        margin: 12px;
+    }
+    .dl-date-range {
+        flex-direction: column;
+    }
+    .dl-date-sep {
+        display: none;
+    }
+    .dl-footer {
+        flex-direction: column;
+        gap: 10px;
+    }
+    .dl-clear-btn, .dl-download-btn {
+        width: 100%;
         justify-content: center;
     }
 }

@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
-import { FileText, Eye, Edit2, Printer, X, Search, RefreshCw, ChevronLeft, ChevronRight, Plus, Trash2, IndianRupee } from 'lucide-react';
-import { billingAPI, invoiceTemplateAPI } from '../services/api';
+import { FileText, Eye, Edit2, Printer, X, Search, RefreshCw, ChevronLeft, ChevronRight, Plus, Trash2, IndianRupee, BarChart3, Download, Filter, ChevronDown, Loader2, CheckCircle } from 'lucide-react';
+import { billingAPI, departmentsAPI, invoiceTemplateAPI } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import { toast } from 'sonner';
 import QRCode from 'qrcode';
@@ -1021,10 +1021,23 @@ const Billing = () => {
     const [generateModal, setGenerateModal] = useState(null);
     const [viewModal, setViewModal] = useState(null);
     const [editModal, setEditModal] = useState(null);
+    const [showInsightsModal, setShowInsightsModal] = useState(false);
+    const [departments, setDepartments] = useState([]);
 
     useEffect(() => {
         fetchData();
     }, [pagination.page, statusFilter, searchTerm]);
+
+    useEffect(() => {
+        fetchDepartments();
+    }, []);
+
+    const fetchDepartments = async () => {
+        try {
+            const res = await departmentsAPI.getAll();
+            setDepartments(res.departments || res.data || res || []);
+        } catch { /* silent */ }
+    };
 
     const fetchData = async () => {
         setLoading(true);
@@ -1088,9 +1101,15 @@ const Billing = () => {
                     <h1><IndianRupee size={28} /> Billing & Invoicing</h1>
                     <p>Manage invoices for all appointments</p>
                 </div>
-                <button className="refresh-btn" onClick={fetchData} title="Refresh">
-                    <RefreshCw size={18} />
-                </button>
+                <div className="billing-header-actions">
+                    <button className="bil-ins-trigger-btn" onClick={() => setShowInsightsModal(true)}>
+                        <BarChart3 size={16} />
+                        Insights
+                    </button>
+                    <button className="refresh-btn" onClick={fetchData} title="Refresh">
+                        <RefreshCw size={18} />
+                    </button>
+                </div>
             </div>
 
             {/* Search & Filters */}
@@ -1247,6 +1266,345 @@ const Billing = () => {
                     onUpdated={() => { setEditModal(null); fetchData(); }}
                 />
             )}
+
+            {showInsightsModal && (
+                <BillingInsightsModal
+                    departments={departments}
+                    onClose={() => setShowInsightsModal(false)}
+                />
+            )}
+        </div>
+    );
+};
+
+/* ================================================================
+   BILLING INSIGHTS MODAL
+   ================================================================ */
+const BillingInsightsModal = ({ departments, onClose }) => {
+    const [dateRange, setDateRange] = useState('this_month');
+    const [customFrom, setCustomFrom] = useState('');
+    const [customTo, setCustomTo] = useState('');
+    const [status, setStatus] = useState('');
+    const [department, setDepartment] = useState('');
+    const [data, setData] = useState([]);
+    const [analytics, setAnalytics] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [downloading, setDownloading] = useState(false);
+    const [downloadDone, setDownloadDone] = useState(false);
+
+    const getDateBounds = () => {
+        const now = new Date();
+        let from, to;
+        to = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59);
+        switch (dateRange) {
+            case 'this_month':
+                from = new Date(now.getFullYear(), now.getMonth(), 1);
+                break;
+            case 'past_2':
+                from = new Date(now.getFullYear(), now.getMonth() - 2, 1);
+                break;
+            case 'past_3':
+                from = new Date(now.getFullYear(), now.getMonth() - 3, 1);
+                break;
+            case 'past_6':
+                from = new Date(now.getFullYear(), now.getMonth() - 6, 1);
+                break;
+            case 'custom':
+                from = customFrom ? new Date(customFrom) : null;
+                to = customTo ? new Date(customTo + 'T23:59:59') : to;
+                break;
+            default:
+                from = null;
+        }
+        return { from, to };
+    };
+
+    const fetchInsights = async () => {
+        try {
+            setLoading(true);
+            const { from, to } = getDateBounds();
+            const params = {
+                dateFrom: from ? from.toISOString() : undefined,
+                dateTo: to ? to.toISOString() : undefined,
+                department: department || undefined,
+                status: status || undefined,
+            };
+            const res = await billingAPI.getInsights(params);
+            setData(res.data || []);
+            setAnalytics(res.analytics || null);
+        } catch {
+            toast.error('Failed to load insights');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchInsights();
+    }, [dateRange, customFrom, customTo, department, status]);
+
+    const handleClear = () => {
+        setDateRange('this_month');
+        setCustomFrom('');
+        setCustomTo('');
+        setStatus('');
+        setDepartment('');
+    };
+
+    const handleDownload = async () => {
+        if (!data.length) {
+            toast.error('No invoices to download');
+            return;
+        }
+        try {
+            setDownloading(true);
+            setDownloadDone(false);
+
+            const headers = ['Invoice #', 'Patient', 'Patient ID', 'Appointment ID', 'Date', 'Department', 'Amount', 'Paid', 'Due', 'Status', 'Payment Method'];
+            const rows = data.map(d => [
+                d.billNumber || '',
+                d.fullName || '',
+                d.patientId || '',
+                d.appointmentId || '',
+                d.appointmentDate ? new Date(d.appointmentDate).toLocaleDateString('en-IN') : '',
+                d.department || '',
+                d.totalAmount?.toFixed(2) || '0.00',
+                d.paidAmount?.toFixed(2) || '0.00',
+                d.dueAmount?.toFixed(2) || '0.00',
+                d.paymentStatus || '',
+                d.paymentMethod || '',
+            ]);
+
+            const csvContent = [headers, ...rows]
+                .map(r => r.map(c => `"${String(c).replace(/"/g, '""')}"`).join(','))
+                .join('\n');
+
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `invoices_${new Date().toISOString().slice(0, 10)}.csv`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+
+            setDownloadDone(true);
+            toast.success(`Downloaded ${data.length} invoices`);
+            setTimeout(() => {
+                setDownloading(false);
+                setDownloadDone(false);
+            }, 1200);
+        } catch {
+            toast.error('Download failed');
+            setDownloading(false);
+        }
+    };
+
+    const fmt = (n) => {
+        if (n >= 100000) return `${(n / 100000).toFixed(1)}L`;
+        if (n >= 1000) return `${(n / 1000).toFixed(1)}K`;
+        return n.toFixed(0);
+    };
+
+    return (
+        <div className="bil-ins-overlay" onClick={onClose}>
+            <div className="bil-ins-modal" onClick={e => e.stopPropagation()}>
+                {/* Header */}
+                <div className="bil-ins-header">
+                    <div className="bil-ins-header-left">
+                        <BarChart3 size={20} />
+                        <div>
+                            <h2>Invoice Insights</h2>
+                            <p>Analytics, filters & download</p>
+                        </div>
+                    </div>
+                    <button className="bil-ins-close" onClick={onClose}>
+                        <X size={18} />
+                    </button>
+                </div>
+
+                {/* Analytics Cards */}
+                {analytics && !loading && (
+                    <div className="bil-ins-cards">
+                        <div className="bil-ins-card bil-ins-card-total">
+                            <span className="bil-ins-card-label">Total Invoices</span>
+                            <span className="bil-ins-card-value">{analytics.totalInvoices}</span>
+                        </div>
+                        <div className="bil-ins-card bil-ins-card-revenue">
+                            <span className="bil-ins-card-label">Revenue</span>
+                            <span className="bil-ins-card-value">{RS}{fmt(analytics.totalRevenue)}</span>
+                        </div>
+                        <div className="bil-ins-card bil-ins-card-paid">
+                            <span className="bil-ins-card-label">Collected</span>
+                            <span className="bil-ins-card-value">{RS}{fmt(analytics.totalPaid)}</span>
+                        </div>
+                        <div className="bil-ins-card bil-ins-card-due">
+                            <span className="bil-ins-card-label">Outstanding</span>
+                            <span className="bil-ins-card-value">{RS}{fmt(analytics.totalDue)}</span>
+                        </div>
+                    </div>
+                )}
+
+                {/* Status Breakdown Bar */}
+                {analytics && !loading && analytics.totalInvoices > 0 && (
+                    <div className="bil-ins-status-bar-wrapper">
+                        <div className="bil-ins-status-bar">
+                            {analytics.statusBreakdown.paid > 0 && (
+                                <div className="bil-ins-bar-seg bil-ins-bar-paid" style={{ flex: analytics.statusBreakdown.paid }} title={`Paid: ${analytics.statusBreakdown.paid}`} />
+                            )}
+                            {analytics.statusBreakdown.pending > 0 && (
+                                <div className="bil-ins-bar-seg bil-ins-bar-pending" style={{ flex: analytics.statusBreakdown.pending }} title={`Pending: ${analytics.statusBreakdown.pending}`} />
+                            )}
+                            {analytics.statusBreakdown.partial > 0 && (
+                                <div className="bil-ins-bar-seg bil-ins-bar-partial" style={{ flex: analytics.statusBreakdown.partial }} title={`Partial: ${analytics.statusBreakdown.partial}`} />
+                            )}
+                            {analytics.statusBreakdown.due > 0 && (
+                                <div className="bil-ins-bar-seg bil-ins-bar-due" style={{ flex: analytics.statusBreakdown.due }} title={`Due: ${analytics.statusBreakdown.due}`} />
+                            )}
+                        </div>
+                        <div className="bil-ins-status-legend">
+                            {analytics.statusBreakdown.paid > 0 && <span className="bil-ins-legend-item"><span className="bil-ins-dot bil-ins-dot-paid" />{analytics.statusBreakdown.paid} Paid</span>}
+                            {analytics.statusBreakdown.pending > 0 && <span className="bil-ins-legend-item"><span className="bil-ins-dot bil-ins-dot-pending" />{analytics.statusBreakdown.pending} Pending</span>}
+                            {analytics.statusBreakdown.partial > 0 && <span className="bil-ins-legend-item"><span className="bil-ins-dot bil-ins-dot-partial" />{analytics.statusBreakdown.partial} Partial</span>}
+                            {analytics.statusBreakdown.due > 0 && <span className="bil-ins-legend-item"><span className="bil-ins-dot bil-ins-dot-due" />{analytics.statusBreakdown.due} Due</span>}
+                        </div>
+                    </div>
+                )}
+
+                {/* Filters */}
+                <div className="bil-ins-body">
+                    {/* Date Range */}
+                    <div className="bil-ins-section">
+                        <label className="bil-ins-label">Date Range</label>
+                        <div className="bil-ins-chip-row">
+                            {[
+                                { key: 'this_month', label: 'This Month' },
+                                { key: 'past_2', label: 'Past 2 Months' },
+                                { key: 'past_3', label: 'Past 3 Months' },
+                                { key: 'past_6', label: 'Past 6 Months' },
+                                { key: 'custom', label: 'Custom' },
+                            ].map(opt => (
+                                <button
+                                    key={opt.key}
+                                    className={`bil-ins-chip ${dateRange === opt.key ? 'active' : ''}`}
+                                    onClick={() => setDateRange(opt.key)}
+                                >
+                                    {opt.label}
+                                </button>
+                            ))}
+                        </div>
+                        {dateRange === 'custom' && (
+                            <div className="bil-ins-date-range">
+                                <div className="bil-ins-date-field">
+                                    <label>From</label>
+                                    <input type="date" value={customFrom} onChange={e => setCustomFrom(e.target.value)} />
+                                </div>
+                                <span className="bil-ins-date-sep">—</span>
+                                <div className="bil-ins-date-field">
+                                    <label>To</label>
+                                    <input type="date" value={customTo} onChange={e => setCustomTo(e.target.value)} />
+                                </div>
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Department */}
+                    <div className="bil-ins-section">
+                        <label className="bil-ins-label">Department</label>
+                        <div className="bil-ins-select-wrapper">
+                            <select value={department} onChange={e => setDepartment(e.target.value)}>
+                                <option value="">All Departments</option>
+                                {departments.map(d => (
+                                    <option key={d._id} value={d.name}>{d.name}</option>
+                                ))}
+                            </select>
+                            <ChevronDown size={14} className="bil-ins-select-icon" />
+                        </div>
+                    </div>
+
+                    {/* Status */}
+                    <div className="bil-ins-section">
+                        <label className="bil-ins-label">Payment Status</label>
+                        <div className="bil-ins-chip-row">
+                            {[
+                                { key: '', label: 'All' },
+                                { key: 'Paid', label: 'Paid' },
+                                { key: 'Pending', label: 'Pending' },
+                                { key: 'Partial', label: 'Partial' },
+                                { key: 'Due', label: 'Due' },
+                            ].map(opt => (
+                                <button
+                                    key={opt.key}
+                                    className={`bil-ins-chip ${status === opt.key ? 'active' : ''}`}
+                                    onClick={() => setStatus(opt.key)}
+                                >
+                                    {opt.label}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+
+                {/* Data Preview Table */}
+                <div className="bil-ins-table-wrapper">
+                    {loading ? (
+                        <div className="bil-ins-loading"><Loader2 size={20} className="bil-ins-spin" /> Loading insights...</div>
+                    ) : data.length === 0 ? (
+                        <div className="bil-ins-empty">No invoices match the selected filters.</div>
+                    ) : (
+                        <table className="bil-ins-table">
+                            <thead>
+                                <tr>
+                                    <th>Invoice #</th>
+                                    <th>Patient</th>
+                                    <th>Appt ID</th>
+                                    <th>Date</th>
+                                    <th>Department</th>
+                                    <th>Amount</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {data.slice(0, 50).map((row, i) => (
+                                    <tr key={i}>
+                                        <td><span className="bil-ins-inv-num">{row.billNumber}</span></td>
+                                        <td className="bil-ins-patient">{row.fullName}</td>
+                                        <td><span className="bil-ins-appt-id">{row.appointmentId}</span></td>
+                                        <td>{row.appointmentDate ? new Date(row.appointmentDate).toLocaleDateString('en-IN') : '-'}</td>
+                                        <td>{row.department || '-'}</td>
+                                        <td className="bil-ins-amount">{RS}{row.totalAmount?.toFixed(2)}</td>
+                                        <td><span className={`bil-ins-badge bil-ins-badge-${row.paymentStatus?.toLowerCase()}`}>{row.paymentStatus}</span></td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    )}
+                    {data.length > 50 && (
+                        <div className="bil-ins-overflow">Showing 50 of {data.length} — download CSV for full data</div>
+                    )}
+                </div>
+
+                {/* Footer */}
+                <div className="bil-ins-footer">
+                    <button className="bil-ins-clear-btn" onClick={handleClear}>Clear Filters</button>
+                    <button
+                        className={`bil-ins-download-btn ${downloading ? (downloadDone ? 'done' : 'loading') : ''}`}
+                        onClick={handleDownload}
+                        disabled={downloading || loading}
+                    >
+                        {downloading ? (
+                            downloadDone ? (
+                                <><CheckCircle size={16} /> Done!</>
+                            ) : (
+                                <><Loader2 size={16} className="bil-ins-spin" /> Downloading...</>
+                            )
+                        ) : (
+                            <><Download size={16} /> Download CSV</>
+                        )}
+                    </button>
+                </div>
+            </div>
         </div>
     );
 };

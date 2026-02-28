@@ -5,7 +5,7 @@ const Department = require('../models/Department');
 // Get all public appointments (Admin/Receptionist)
 exports.getAllPublicAppointments = async (req, res) => {
     try {
-        const { status, date, department, search, page = 1, limit = 10 } = req.query;
+        const { status, date, dateFrom, dateTo, department, doctor, search, page = 1, limit = 10 } = req.query;
 
         let query = {};
 
@@ -14,8 +14,12 @@ exports.getAllPublicAppointments = async (req, res) => {
             query.appointmentStatus = status;
         }
 
-        // Filter by date
-        if (date) {
+        // Filter by date range (dateFrom/dateTo) or single date
+        if (dateFrom || dateTo) {
+            query.appointmentDate = {};
+            if (dateFrom) query.appointmentDate.$gte = new Date(dateFrom);
+            if (dateTo) query.appointmentDate.$lte = new Date(dateTo);
+        } else if (date) {
             const startDate = new Date(date);
             const endDate = new Date(date);
             endDate.setDate(endDate.getDate() + 1);
@@ -25,6 +29,11 @@ exports.getAllPublicAppointments = async (req, res) => {
         // Filter by department
         if (department) {
             query.department = department;
+        }
+
+        // Filter by assigned doctor
+        if (doctor) {
+            query.doctorAssigned = doctor;
         }
 
         // Search by name, email, or ID
@@ -284,16 +293,23 @@ exports.getMyAssignedAppointments = async (req, res) => {
             return res.status(404).json({ success: false, message: 'Doctor profile not found' });
         }
 
-        const { status, date, search, page = 1, limit = 10 } = req.query;
+        const { status, date, dateFrom, dateTo, search, page = 1, limit = 10 } = req.query;
         let query = { doctorAssigned: doctor._id };
 
         if (status) query.appointmentStatus = status;
-        if (date) {
+
+        // Filter by date range (dateFrom/dateTo) or single date
+        if (dateFrom || dateTo) {
+            query.appointmentDate = {};
+            if (dateFrom) query.appointmentDate.$gte = new Date(dateFrom);
+            if (dateTo) query.appointmentDate.$lte = new Date(dateTo);
+        } else if (date) {
             const startDate = new Date(date);
             const endDate = new Date(date);
             endDate.setDate(endDate.getDate() + 1);
             query.appointmentDate = { $gte: startDate, $lt: endDate };
         }
+
         if (search) {
             query.$or = [
                 { fullName: { $regex: search, $options: 'i' } },

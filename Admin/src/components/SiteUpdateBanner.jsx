@@ -4,74 +4,78 @@ import api from '../services/api';
 import './SiteUpdateBanner.css';
 
 const SiteUpdateBanner = () => {
-    const [banner, setBanner] = useState(null);
-    const [isVisible, setIsVisible] = useState(true);
-    const [isDismissed, setIsDismissed] = useState(false);
+    const [banners, setBanners] = useState([]);
+    const [dismissedIds, setDismissedIds] = useState(() => {
+        try {
+            return JSON.parse(sessionStorage.getItem('dismissedBannerIds') || '[]');
+        } catch {
+            return [];
+        }
+    });
 
     useEffect(() => {
-        fetchActiveBanner();
+        fetchActiveBanners();
     }, []);
 
-    const fetchActiveBanner = async () => {
+    const fetchActiveBanners = async () => {
         try {
             const response = await api.get('/site-updates/active');
-            if (response.banner) {
-                setBanner(response.banner);
-                // Check if user has dismissed this banner
-                const dismissedBannerId = localStorage.getItem('dismissedBannerId');
-                if (dismissedBannerId === response.banner._id) {
-                    setIsVisible(false);
-                    setIsDismissed(true);
-                }
+            if (response.banners && response.banners.length > 0) {
+                setBanners(response.banners);
             }
         } catch (error) {
-            console.error('Error fetching site update banner:', error);
+            console.error('Error fetching site update banners:', error);
         }
     };
 
-    const handleDismiss = () => {
-        setIsVisible(false);
-        if (banner) {
-            localStorage.setItem('dismissedBannerId', banner._id);
-            setIsDismissed(true);
-        }
+    const handleDismiss = (id) => {
+        const updated = [...dismissedIds, id];
+        setDismissedIds(updated);
+        sessionStorage.setItem('dismissedBannerIds', JSON.stringify(updated));
     };
 
-    if (!banner || isDismissed || !isVisible) {
+    const visibleBanners = banners.filter((b) => !dismissedIds.includes(b._id));
+
+    if (visibleBanners.length === 0) {
         return null;
     }
 
     return (
-        <div
-            className="site-update-banner"
-            style={{
-                backgroundColor: banner.backgroundColor || '#7c3aed',
-                color: banner.textColor || '#ffffff'
-            }}
-        >
-            <div className="site-update-content">
-                <span className="site-update-message">
-                    {banner.message}
-                </span>
-                {banner.linkText && banner.linkUrl && (
-                    <a
-                        href={banner.linkUrl}
-                        className="site-update-link"
-                        style={{ color: banner.textColor || '#ffffff' }}
-                        target="_blank"
-                        rel="noopener noreferrer"
+        <div className="site-update-banners-wrapper">
+            {visibleBanners.map((banner) => (
+                <div
+                    key={banner._id}
+                    className="site-update-banner"
+                    style={{
+                        backgroundColor: banner.backgroundColor || '#7c3aed',
+                        color: banner.textColor || '#ffffff'
+                    }}
+                >
+                    <div className="site-update-content">
+                        <span className="site-update-message">
+                            {banner.message}
+                        </span>
+                        {banner.linkText && banner.linkUrl && (
+                            <a
+                                href={banner.linkUrl}
+                                className="site-update-link"
+                                style={{ color: banner.textColor || '#ffffff' }}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                {banner.linkText}
+                            </a>
+                        )}
+                    </div>
+                    <button
+                        className="site-update-close"
+                        onClick={() => handleDismiss(banner._id)}
+                        aria-label="Dismiss banner"
                     >
-                        {banner.linkText}
-                    </a>
-                )}
-            </div>
-            <button
-                className="site-update-close"
-                onClick={handleDismiss}
-                aria-label="Dismiss banner"
-            >
-                <FaTimes />
-            </button>
+                        <FaTimes />
+                    </button>
+                </div>
+            ))}
         </div>
     );
 };

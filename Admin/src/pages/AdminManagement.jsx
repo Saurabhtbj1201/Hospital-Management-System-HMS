@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { ShieldCheck, Plus, Search, Edit2, RotateCcw, Power, Trash2, X } from 'lucide-react';
+import { ShieldCheck, Plus, Search, Edit2, RotateCcw, Power, Trash2, X, Download, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import api from '../services/api';
 import { useAuth } from '../context/AuthContext';
@@ -16,6 +16,7 @@ const AdminManagement = () => {
         email: '',
         phone: ''
     });
+    const [downloading, setDownloading] = useState(false);
 
     useEffect(() => {
         fetchAdmins();
@@ -105,6 +106,45 @@ const AdminManagement = () => {
         setFormData({ name: '', email: '', phone: '' });
     };
 
+    const handleDownloadSelfData = async () => {
+        if (!currentUser?._id) {
+            toast.error('User info not available');
+            return;
+        }
+        try {
+            setDownloading(true);
+            const profile = await api.get(`/user-management/profile/${currentUser._id}`);
+            const ap = profile.adminProfile || {};
+            const headers = ['Name', 'Email', 'Phone', 'Status', 'Gender', 'Date of Birth', 'Joining Date', 'Created At', 'Last Login'];
+            const row = [
+                profile.name || '',
+                profile.email || '',
+                profile.phone || '',
+                profile.isActive ? 'Active' : 'Inactive',
+                ap.gender || '',
+                ap.dateOfBirth ? new Date(ap.dateOfBirth).toLocaleDateString() : '',
+                ap.joiningDate ? new Date(ap.joiningDate).toLocaleDateString() : '',
+                profile.createdAt ? new Date(profile.createdAt).toLocaleDateString() : '',
+                profile.lastLogin ? new Date(profile.lastLogin).toLocaleString() : 'Never'
+            ];
+            const csvContent = [headers, row]
+                .map(r => r.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(','))
+                .join('\n');
+            const blob = new Blob([`\uFEFF${csvContent}`], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `my_admin_data_${new Date().toISOString().slice(0, 10)}.csv`;
+            link.click();
+            URL.revokeObjectURL(url);
+            toast.success('Your admin data downloaded');
+        } catch {
+            toast.error('Failed to download your data');
+        } finally {
+            setDownloading(false);
+        }
+    };
+
     const filteredAdmins = (admins || []).filter(admin =>
         admin.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         admin.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -113,33 +153,38 @@ const AdminManagement = () => {
 
     return (
         <div className="p-6">
-            <div className="flex items-start justify-between mb-6">
+            <div className="flex items-start justify-between mb-4">
                 <div>
                     <h1 className="text-2xl font-bold text-gray-900 mb-1">Admin Management</h1>
                     <p className="text-gray-600">Manage system administrators and their access</p>
                 </div>
-                <button
-                    onClick={() => setShowModal(true)}
-                    className="btn-primary flex items-center gap-2"
-                >
-                    <Plus className="w-4 h-4" />
-                    Add Admin
-                </button>
+                <div className="flex items-center gap-3">
+                    <button onClick={handleDownloadSelfData} disabled={downloading} className="btn-secondary flex items-center gap-2" title="Download your admin data as CSV">
+                        {downloading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
+                        {downloading ? 'Downloading...' : 'Download My Data'}
+                    </button>
+                    <button
+                        onClick={() => setShowModal(true)}
+                        className="btn-primary flex items-center gap-2"
+                    >
+                        <Plus className="w-4 h-4" />
+                        Add Admin
+                    </button>
+                </div>
             </div>
 
             {/* Search Bar */}
-            <div className="card p-4 mb-6">
-                <div className="relative">
-                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                    <input
-                        type="text"
-                        placeholder="Search by name, email, or phone..."
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                        className="input pl-10 w-full"
-                    />
+                <div className="search-form mb-6">
+                    <div className="search-input-wrapper">
+                        <Search size={16} />
+                        <input
+                            type="text"
+                            placeholder="Search by name, email, or phone..."
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                        />
+                    </div>
                 </div>
-            </div>
 
             {/* Admins Table */}
             <div className="card overflow-hidden">

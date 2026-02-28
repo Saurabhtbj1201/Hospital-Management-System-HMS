@@ -1,14 +1,15 @@
 const SiteUpdate = require('../models/SiteUpdate');
 
-// Get active site update banner (public)
+// Get active site update banners (public)
 exports.getActiveBanner = async (req, res) => {
     try {
         const now = new Date();
-        const banner = await SiteUpdate.findOne({
+        const banners = await SiteUpdate.find({
             isActive: true,
             startDate: { $lte: now },
             $or: [
                 { endDate: { $exists: false } },
+                { endDate: null },
                 { endDate: { $gte: now } }
             ]
         })
@@ -17,7 +18,8 @@ exports.getActiveBanner = async (req, res) => {
 
         res.status(200).json({
             success: true,
-            banner
+            banners,
+            banner: banners.length > 0 ? banners[0] : null
         });
     } catch (error) {
         res.status(500).json({

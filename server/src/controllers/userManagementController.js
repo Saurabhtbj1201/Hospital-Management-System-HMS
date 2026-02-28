@@ -1,6 +1,9 @@
 const User = require('../models/User');
 const Doctor = require('../models/Doctor');
+const Receptionist = require('../models/Receptionist');
+const Admin = require('../models/Admin');
 const bcrypt = require('bcryptjs');
+const { getPresignedUrl } = require('../services/s3Service');
 
 // Get all users by role
 exports.getUsersByRole = async (req, res) => {
@@ -209,6 +212,109 @@ exports.resetUserPassword = async (req, res) => {
         await user.save();
 
         res.json({ message: 'Password reset successfully' });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+// Get full profile of a user by ID (admin only)
+exports.getUserProfile = async (req, res) => {
+    try {
+        const user = await User.findById(req.params.id).select('-password');
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        const profileData = {
+            _id: user._id,
+            name: user.name,
+            email: user.email,
+            phone: user.phone,
+            role: user.role,
+            isActive: user.isActive,
+            lastLogin: user.lastLogin,
+            createdAt: user.createdAt,
+            updatedAt: user.updatedAt
+        };
+
+        if (user.role === 'Doctor') {
+            const doctor = await Doctor.findOne({ user: user._id })
+                .populate('department', 'name')
+                .populate('departments', 'name');
+            if (doctor) {
+                const [profilePhotoUrl, digitalSignatureUrl] = await Promise.all([
+                    getPresignedUrl(doctor.profilePhoto),
+                    getPresignedUrl(doctor.digitalSignature),
+                ]);
+                profileData.doctorProfile = {
+                    _id: doctor._id,
+                    qualifications: doctor.qualifications,
+                    experience: doctor.experience,
+                    fees: doctor.fees,
+                    primaryDepartment: doctor.department,
+                    departments: doctor.departments,
+                    availableSlots: doctor.availableSlots,
+                    gender: doctor.gender,
+                    dateOfBirth: doctor.dateOfBirth,
+                    medicalCouncilId: doctor.medicalCouncilId,
+                    profilePhoto: profilePhotoUrl || '',
+                    digitalSignature: digitalSignatureUrl || '',
+                    shortBio: doctor.shortBio,
+                    detailedBiography: doctor.detailedBiography,
+                    specialInterests: doctor.specialInterests,
+                    featuredTreatments: doctor.featuredTreatments,
+                    patientTestimonials: doctor.patientTestimonials,
+                    isActive: doctor.isActive,
+                };
+            }
+        }
+
+        if (user.role === 'Receptionist') {
+            const receptionist = await Receptionist.findOne({ user: user._id });
+            if (receptionist) {
+                const [profilePhotoUrl, idProofDocUrl, digitalSignatureUrl] = await Promise.all([
+                    getPresignedUrl(receptionist.profilePhoto),
+                    getPresignedUrl(receptionist.idProofDocument),
+                    getPresignedUrl(receptionist.digitalSignature),
+                ]);
+                profileData.receptionistProfile = {
+                    _id: receptionist._id,
+                    profilePhoto: profilePhotoUrl || '',
+                    gender: receptionist.gender,
+                    dateOfBirth: receptionist.dateOfBirth,
+                    shift: receptionist.shift,
+                    joiningDate: receptionist.joiningDate,
+                    experience: receptionist.experience,
+                    educationLevel: receptionist.educationLevel,
+                    idProofType: receptionist.idProofType,
+                    idProofNumber: receptionist.idProofNumber,
+                    idProofDocument: idProofDocUrl || '',
+                    digitalSignature: digitalSignatureUrl || '',
+                    isActive: receptionist.isActive,
+                };
+            }
+        }
+
+        if (user.role === 'Admin') {
+            const admin = await Admin.findOne({ user: user._id });
+            if (admin) {
+                const [profilePhotoUrl, digitalSignatureUrl] = await Promise.all([
+                    getPresignedUrl(admin.profilePhoto),
+                    getPresignedUrl(admin.digitalSignature),
+                ]);
+                profileData.adminProfile = {
+                    _id: admin._id,
+                    profilePhoto: profilePhotoUrl || '',
+                    digitalSignature: digitalSignatureUrl || '',
+                    gender: admin.gender,
+                    dateOfBirth: admin.dateOfBirth,
+                    joiningDate: admin.joiningDate,
+                    isActive: admin.isActive,
+                };
+            }
+        }
+
+        res.json(profileData);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }

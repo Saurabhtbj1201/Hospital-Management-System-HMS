@@ -6,7 +6,8 @@ const {
     updateUser,
     toggleUserStatus,
     resetUserPassword,
-    deleteUser
+    deleteUser,
+    getUserProfile
 } = require('../controllers/userManagementController');
 const { protect, adminOnly } = require('../middleware/authMiddleware');
 
@@ -14,6 +15,7 @@ const { protect, adminOnly } = require('../middleware/authMiddleware');
 router.use(protect);
 router.use(adminOnly);
 
+router.get('/profile/:id', getUserProfile);
 router.get('/:role', getUsersByRole);
 router.post('/', createUser);
 router.put('/:id', updateUser);

@@ -122,6 +122,7 @@ export const appointmentsAPI = {
 export const patientsAPI = {
     getAll: (params) => api.get('/patients/public-appointments/list', { params }),
     getById: (patientId) => api.get(`/patients/public-appointments/${patientId}`),
+    download: (params) => api.get('/patients/public-appointments/download', { params }),
     create: (patientData) => api.post('/patients', patientData),
     update: (id, patientData) => api.put(`/patients/${id}`, patientData),
     updateMedicalInfo: (patientId, medicalData) => api.put(`/patients/public-appointments/${patientId}/medical`, medicalData),
@@ -136,6 +137,7 @@ export const billingAPI = {
     generateInvoice: (appointmentId, data) => api.post(`/bills/generate/${appointmentId}`, data),
     getBillById: (id) => api.get(`/bills/${id}`),
     updateBill: (id, data) => api.put(`/bills/${id}`, data),
+    getInsights: (params) => api.get('/bills/insights', { params }),
 };
 
 // Dashboard
