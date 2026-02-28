@@ -1142,7 +1142,42 @@ const Billing = () => {
             {/* Table */}
             <div className="billing-table-container">
                 {loading ? (
-                    <div className="loading-state">Loading billing data...</div>
+                    <table className="billing-table">
+                        <thead>
+                            <tr>
+                                <th>Patient</th>
+                                <th>Appointment ID</th>
+                                <th>Date</th>
+                                <th>Department</th>
+                                <th>Amount</th>
+                                <th>Invoice #</th>
+                                <th>Bill Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {[...Array(7)].map((_, i) => (
+                                <tr key={i} className="billing-skeleton-row">
+                                    <td>
+                                        <div className="billing-skeleton billing-skeleton-text" style={{ width: '110px', marginBottom: '6px' }} />
+                                        <div className="billing-skeleton billing-skeleton-text" style={{ width: '70px', height: '10px' }} />
+                                    </td>
+                                    <td><div className="billing-skeleton billing-skeleton-text" style={{ width: '85px' }} /></td>
+                                    <td><div className="billing-skeleton billing-skeleton-text" style={{ width: '80px' }} /></td>
+                                    <td><div className="billing-skeleton billing-skeleton-text" style={{ width: '90px' }} /></td>
+                                    <td><div className="billing-skeleton billing-skeleton-text" style={{ width: '65px' }} /></td>
+                                    <td><div className="billing-skeleton billing-skeleton-text" style={{ width: '90px' }} /></td>
+                                    <td><div className="billing-skeleton billing-skeleton-badge" /></td>
+                                    <td>
+                                        <div style={{ display: 'flex', gap: '6px' }}>
+                                            <div className="billing-skeleton billing-skeleton-action" />
+                                            <div className="billing-skeleton billing-skeleton-action" />
+                                        </div>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
                 ) : data.length === 0 ? (
                     <div className="empty-state">No appointments found matching your criteria.</div>
                 ) : (

@@ -193,9 +193,39 @@ const Support = () => {
             </div>
 
             {loading ? (
-                <div className="loading-spinner">
-                    <div className="spinner-large"></div>
-                    <p>Loading support tickets...</p>
+                <div className="tickets-table-container">
+                    <table className="tickets-table">
+                        <thead>
+                            <tr>
+                                <th>Ticket ID</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Issue Type</th>
+                                <th>Status</th>
+                                <th>Created</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {[...Array(5)].map((_, i) => (
+                                <tr key={i} className="mgmt-skeleton-row">
+                                    <td><div className="mgmt-skeleton mgmt-skeleton-text" style={{ width: '65px' }} /></td>
+                                    <td><div className="mgmt-skeleton mgmt-skeleton-text" style={{ width: '110px' }} /></td>
+                                    <td><div className="mgmt-skeleton mgmt-skeleton-text" style={{ width: '150px' }} /></td>
+                                    <td><div className="mgmt-skeleton mgmt-skeleton-text" style={{ width: '90px' }} /></td>
+                                    <td><div className="mgmt-skeleton mgmt-skeleton-badge" /></td>
+                                    <td><div className="mgmt-skeleton mgmt-skeleton-text" style={{ width: '85px' }} /></td>
+                                    <td>
+                                        <div style={{ display: 'flex', gap: '6px' }}>
+                                            <div className="mgmt-skeleton mgmt-skeleton-btn" />
+                                            <div className="mgmt-skeleton mgmt-skeleton-btn" />
+                                            <div className="mgmt-skeleton mgmt-skeleton-btn" />
+                                        </div>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
                 </div>
             ) : (
             <>

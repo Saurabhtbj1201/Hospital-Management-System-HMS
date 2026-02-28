@@ -74,3 +74,38 @@
     transform: rotate(360deg);
   }
 }
+
+/* Skeleton Loading */
+@keyframes mgmt-skeleton-shimmer {
+  0% { background-position: -400px 0; }
+  100% { background-position: 400px 0; }
+}
+
+.mgmt-skeleton {
+  background: linear-gradient(90deg, #e5e7eb 25%, #f3f4f6 50%, #e5e7eb 75%);
+  background-size: 400px 100%;
+  animation: mgmt-skeleton-shimmer 1.5s ease-in-out infinite;
+  border-radius: 4px;
+  display: inline-block;
+}
+
+.mgmt-skeleton-text {
+  height: 14px;
+  border-radius: 4px;
+}
+
+.mgmt-skeleton-badge {
+  width: 64px;
+  height: 24px;
+  border-radius: 12px;
+}
+
+.mgmt-skeleton-btn {
+  width: 30px;
+  height: 30px;
+  border-radius: 6px;
+}
+
+.mgmt-skeleton-row td {
+  padding: 16px;
+}

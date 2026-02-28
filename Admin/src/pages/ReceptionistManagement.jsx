@@ -214,8 +214,38 @@ const ReceptionistManagement = () => {
             {/* Receptionists Table */}
             <div className="card overflow-hidden">
                 {loading ? (
-                    <div className="p-8 text-center">
-                        <div className="spinner-large"></div>
+                    <div className="overflow-x-auto">
+                        <table className="table">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Phone</th>
+                                    <th>Status</th>
+                                    <th>Created</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {[...Array(5)].map((_, i) => (
+                                    <tr key={i} className="mgmt-skeleton-row">
+                                        <td><div className="mgmt-skeleton mgmt-skeleton-text" style={{ width: '120px' }} /></td>
+                                        <td><div className="mgmt-skeleton mgmt-skeleton-text" style={{ width: '160px' }} /></td>
+                                        <td><div className="mgmt-skeleton mgmt-skeleton-text" style={{ width: '100px' }} /></td>
+                                        <td><div className="mgmt-skeleton mgmt-skeleton-badge" /></td>
+                                        <td><div className="mgmt-skeleton mgmt-skeleton-text" style={{ width: '85px' }} /></td>
+                                        <td>
+                                            <div className="flex gap-2">
+                                                <div className="mgmt-skeleton mgmt-skeleton-btn" />
+                                                <div className="mgmt-skeleton mgmt-skeleton-btn" />
+                                                <div className="mgmt-skeleton mgmt-skeleton-btn" />
+                                                <div className="mgmt-skeleton mgmt-skeleton-btn" />
+                                            </div>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
                     </div>
                 ) : (
                     <div className="overflow-x-auto">

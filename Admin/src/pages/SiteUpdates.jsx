@@ -115,9 +115,43 @@ const SiteUpdates = () => {
             </div>
 
             {loading ? (
-                <div className="loading-spinner">
-                    <div className="spinner-large"></div>
-                    <p>Loading site updates...</p>
+                <div className="table-container">
+                    <table className="site-updates-table">
+                        <thead>
+                            <tr>
+                                <th>MESSAGE</th>
+                                <th>LINK</th>
+                                <th>COLORS</th>
+                                <th>START DATE</th>
+                                <th>END DATE</th>
+                                <th>STATUS</th>
+                                <th>ACTIONS</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {[...Array(4)].map((_, i) => (
+                                <tr key={i} className="mgmt-skeleton-row">
+                                    <td><div className="mgmt-skeleton mgmt-skeleton-text" style={{ width: '180px' }} /></td>
+                                    <td><div className="mgmt-skeleton mgmt-skeleton-text" style={{ width: '80px' }} /></td>
+                                    <td>
+                                        <div style={{ display: 'flex', gap: '6px' }}>
+                                            <div className="mgmt-skeleton" style={{ width: '24px', height: '24px', borderRadius: '4px' }} />
+                                            <div className="mgmt-skeleton" style={{ width: '24px', height: '24px', borderRadius: '4px' }} />
+                                        </div>
+                                    </td>
+                                    <td><div className="mgmt-skeleton mgmt-skeleton-text" style={{ width: '85px' }} /></td>
+                                    <td><div className="mgmt-skeleton mgmt-skeleton-text" style={{ width: '85px' }} /></td>
+                                    <td><div className="mgmt-skeleton mgmt-skeleton-badge" /></td>
+                                    <td>
+                                        <div style={{ display: 'flex', gap: '6px' }}>
+                                            <div className="mgmt-skeleton mgmt-skeleton-btn" />
+                                            <div className="mgmt-skeleton mgmt-skeleton-btn" />
+                                        </div>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
                 </div>
             ) : (
             <>

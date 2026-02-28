@@ -182,10 +182,12 @@ const Appointments = () => {
                     <h1>{isDoctor ? 'My Appointments' : 'Appointments Management'}</h1>
                     <p>{isDoctor ? 'View appointments assigned to you' : 'View and manage all patient appointments'}</p>
                 </div>
-                <button className="dl-trigger-btn" onClick={() => setShowDownloadModal(true)}>
-                    <Download size={16} />
-                    Download
-                </button>
+                {!isDoctor && (
+                    <button className="dl-trigger-btn" onClick={() => setShowDownloadModal(true)}>
+                        <Download size={16} />
+                        Download
+                    </button>
+                )}
             </div>
 
             <div className="appointments-filters">
@@ -248,7 +250,47 @@ const Appointments = () => {
             </div>
 
             {loading ? (
-                <div className="loading">Loading appointments...</div>
+                <div className="appointments-table">
+                    <div className="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Appointment ID</th>
+                                    <th>Patient Name</th>
+                                    <th>Date & Time</th>
+                                    <th>Department</th>
+                                    {isAdminOrReceptionist && <th>Assigned Doctor</th>}
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {[...Array(6)].map((_, i) => (
+                                    <tr key={i} className="skeleton-row">
+                                        <td><div className="skeleton skeleton-text" style={{ width: '80px' }} /></td>
+                                        <td>
+                                            <div className="skeleton skeleton-text" style={{ width: '120px', marginBottom: '6px' }} />
+                                            <div className="skeleton skeleton-text" style={{ width: '150px', height: '10px' }} />
+                                        </td>
+                                        <td>
+                                            <div className="skeleton skeleton-text" style={{ width: '100px', marginBottom: '6px' }} />
+                                            <div className="skeleton skeleton-text" style={{ width: '70px', height: '10px' }} />
+                                        </td>
+                                        <td><div className="skeleton skeleton-text" style={{ width: '90px' }} /></td>
+                                        {isAdminOrReceptionist && <td><div className="skeleton skeleton-text" style={{ width: '110px' }} /></td>}
+                                        <td><div className="skeleton skeleton-badge" /></td>
+                                        <td>
+                                            <div style={{ display: 'flex', gap: '6px' }}>
+                                                <div className="skeleton skeleton-action" />
+                                                {isAdminOrReceptionist && <div className="skeleton skeleton-action" />}
+                                            </div>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             ) : (
                 <>
                     <div className="appointments-table">

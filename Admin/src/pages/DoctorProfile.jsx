@@ -329,8 +329,61 @@ const DoctorProfile = () => {
 
     if (loading) {
         return (
-            <div className="flex items-center justify-center h-[60vh]">
-                <Loader2 className="w-7 h-7 animate-spin text-primary-600" />
+            <div className="p-4 lg:p-6">
+                {/* Header skeleton */}
+                <div className="flex items-center justify-between mb-5">
+                    <div>
+                        <div className="mgmt-skeleton" style={{ width: '140px', height: '20px', borderRadius: '4px', marginBottom: '6px' }} />
+                        <div className="mgmt-skeleton" style={{ width: '340px', height: '12px', borderRadius: '4px' }} />
+                    </div>
+                </div>
+                <div className="flex flex-col lg:flex-row gap-5">
+                    {/* Left sidebar skeleton */}
+                    <div className="lg:w-72 flex-shrink-0 space-y-4">
+                        <div className="bg-white border border-gray-200 p-5">
+                            <div className="flex flex-col items-center">
+                                <div className="mgmt-skeleton" style={{ width: '80px', height: '80px', borderRadius: '50%', marginBottom: '12px' }} />
+                                <div className="mgmt-skeleton" style={{ width: '120px', height: '14px', borderRadius: '4px', marginBottom: '6px' }} />
+                                <div className="mgmt-skeleton" style={{ width: '160px', height: '10px', borderRadius: '4px', marginBottom: '8px' }} />
+                                <div className="flex gap-2">
+                                    <div className="mgmt-skeleton" style={{ width: '50px', height: '20px', borderRadius: '4px' }} />
+                                    <div className="mgmt-skeleton" style={{ width: '50px', height: '20px', borderRadius: '4px' }} />
+                                </div>
+                                <div className="mgmt-skeleton" style={{ width: '100px', height: '10px', borderRadius: '4px', marginTop: '8px' }} />
+                            </div>
+                        </div>
+                        <div className="bg-white border border-gray-200">
+                            {[...Array(5)].map((_, i) => (
+                                <div key={i} className="flex items-center gap-2.5 px-4 py-3" style={{ borderBottom: '1px solid #f3f4f6' }}>
+                                    <div className="mgmt-skeleton" style={{ width: '16px', height: '16px', borderRadius: '4px' }} />
+                                    <div className="mgmt-skeleton" style={{ width: '130px', height: '12px', borderRadius: '4px' }} />
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                    {/* Right content skeleton */}
+                    <div className="flex-1 min-w-0">
+                        <div className="bg-white border border-gray-200 p-5" style={{ borderRadius: '0' }}>
+                            <div className="mgmt-skeleton" style={{ width: '180px', height: '16px', borderRadius: '4px', marginBottom: '6px' }} />
+                            <div className="mgmt-skeleton" style={{ width: '260px', height: '11px', borderRadius: '4px', marginBottom: '20px' }} />
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                {[...Array(8)].map((_, i) => (
+                                    <div key={i}>
+                                        <div className="mgmt-skeleton" style={{ width: '90px', height: '10px', borderRadius: '4px', marginBottom: '8px' }} />
+                                        <div className="mgmt-skeleton" style={{ width: '100%', height: '38px', borderRadius: '4px' }} />
+                                    </div>
+                                ))}
+                            </div>
+                            <div style={{ marginTop: '20px', paddingTop: '16px', borderTop: '1px solid #f3f4f6' }}>
+                                <div className="mgmt-skeleton" style={{ width: '110px', height: '10px', borderRadius: '4px', marginBottom: '10px' }} />
+                                <div className="mgmt-skeleton" style={{ width: '100%', height: '60px', borderRadius: '4px' }} />
+                            </div>
+                            <div className="flex justify-end mt-4">
+                                <div className="mgmt-skeleton" style={{ width: '120px', height: '36px', borderRadius: '6px' }} />
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         );
     }

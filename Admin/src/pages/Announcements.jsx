@@ -219,9 +219,38 @@ const Announcements = () => {
             </div>
 
             {loading ? (
-                <div className="loading-spinner">
-                    <div className="spinner-large"></div>
-                    <p>Loading announcements...</p>
+                <div className="table-container">
+                    <table className="announcements-table">
+                        <thead>
+                            <tr>
+                                <th>ANNOUNCEMENT TITLE</th>
+                                <th>DESCRIPTION</th>
+                                <th>START DATE</th>
+                                <th>END DATE</th>
+                                <th>TYPE</th>
+                                <th>STATUS</th>
+                                <th>ACTIONS</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {[...Array(5)].map((_, i) => (
+                                <tr key={i} className="mgmt-skeleton-row">
+                                    <td><div className="mgmt-skeleton mgmt-skeleton-text" style={{ width: '140px' }} /></td>
+                                    <td><div className="mgmt-skeleton mgmt-skeleton-text" style={{ width: '180px' }} /></td>
+                                    <td><div className="mgmt-skeleton mgmt-skeleton-text" style={{ width: '85px' }} /></td>
+                                    <td><div className="mgmt-skeleton mgmt-skeleton-text" style={{ width: '85px' }} /></td>
+                                    <td><div className="mgmt-skeleton mgmt-skeleton-badge" /></td>
+                                    <td><div className="mgmt-skeleton mgmt-skeleton-badge" /></td>
+                                    <td>
+                                        <div style={{ display: 'flex', gap: '6px' }}>
+                                            <div className="mgmt-skeleton mgmt-skeleton-btn" />
+                                            <div className="mgmt-skeleton mgmt-skeleton-btn" />
+                                        </div>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
                 </div>
             ) : (
             <>

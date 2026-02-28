@@ -1,10 +1,13 @@
 import { useState, useEffect } from 'react';
 import { Search, X, Phone, Mail, User, Calendar, ChevronLeft, ChevronRight, RefreshCw, FileText, Clock, CheckCircle, XCircle, AlertCircle, Download, Filter, ChevronDown, Loader2 } from 'lucide-react';
 import { patientsAPI } from '../services/api';
+import { useAuth } from '../context/AuthContext';
 import { toast } from 'sonner';
 import './Patients.css';
 
 const Patients = () => {
+    const { user } = useAuth();
+    const isDoctor = user?.role === 'Doctor';
     const [patients, setPatients] = useState([]);
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
@@ -91,10 +94,12 @@ const Patients = () => {
                     <p>View patient information and appointment history</p>
                 </div>
                 <div className="patients-header-actions">
-                    <button className="pat-dl-trigger-btn" onClick={() => setShowDownloadModal(true)}>
-                        <Download size={16} />
-                        Download
-                    </button>
+                    {!isDoctor && (
+                        <button className="pat-dl-trigger-btn" onClick={() => setShowDownloadModal(true)}>
+                            <Download size={16} />
+                            Download
+                        </button>
+                    )}
                     <button className="refresh-btn" onClick={fetchPatients} title="Refresh">
                         <RefreshCw size={18} />
                     </button>
@@ -123,9 +128,33 @@ const Patients = () => {
             </div>
 
             {loading ? (
-                <div className="loading-state">
-                    <div className="spinner"></div>
-                    <p>Loading patients...</p>
+                <div className="patients-table-wrapper">
+                    <table className="patients-table">
+                        <thead>
+                            <tr>
+                                <th>Patient ID</th>
+                                <th>Patient Name</th>
+                                <th>Mobile</th>
+                                <th>Email</th>
+                                <th>Gender</th>
+                                <th>Age</th>
+                                <th className="text-center">Appointments</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {[...Array(8)].map((_, i) => (
+                                <tr key={i} className="skeleton-row">
+                                    <td><div className="skeleton skeleton-text" style={{ width: '75px' }} /></td>
+                                    <td><div className="skeleton skeleton-text" style={{ width: '130px' }} /></td>
+                                    <td><div className="skeleton skeleton-text" style={{ width: '110px' }} /></td>
+                                    <td><div className="skeleton skeleton-text" style={{ width: '160px' }} /></td>
+                                    <td><div className="skeleton skeleton-text" style={{ width: '60px' }} /></td>
+                                    <td><div className="skeleton skeleton-text" style={{ width: '50px' }} /></td>
+                                    <td className="text-center"><div className="skeleton skeleton-badge" style={{ margin: '0 auto' }} /></td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
                 </div>
             ) : patients.length === 0 ? (
                 <div className="empty-state">

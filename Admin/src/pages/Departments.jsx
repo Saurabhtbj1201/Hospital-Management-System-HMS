@@ -474,8 +474,48 @@ const Departments = () => {
 
             <div className="card overflow-hidden">
                 {loading ? (
-                    <div className="p-8 text-center">
-                        <div className="spinner-large"></div>
+                    <div className="overflow-x-auto">
+                        <table className="table">
+                            <thead>
+                                <tr>
+                                    <th>Department</th>
+                                    <th>Doctors</th>
+                                    <th>Consultation Fee</th>
+                                    <th>Contact</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {[...Array(5)].map((_, i) => (
+                                    <tr key={i} className="mgmt-skeleton-row">
+                                        <td>
+                                            <div className="flex items-center gap-3">
+                                                <div className="mgmt-skeleton" style={{ width: '40px', height: '40px', borderRadius: '8px' }} />
+                                                <div>
+                                                    <div className="mgmt-skeleton mgmt-skeleton-text" style={{ width: '120px', marginBottom: '6px' }} />
+                                                    <div className="mgmt-skeleton mgmt-skeleton-text" style={{ width: '160px', height: '10px' }} />
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td><div className="mgmt-skeleton" style={{ width: '32px', height: '32px', borderRadius: '50%' }} /></td>
+                                        <td><div className="mgmt-skeleton mgmt-skeleton-text" style={{ width: '70px' }} /></td>
+                                        <td>
+                                            <div className="mgmt-skeleton mgmt-skeleton-text" style={{ width: '100px', marginBottom: '6px' }} />
+                                            <div className="mgmt-skeleton mgmt-skeleton-text" style={{ width: '130px', height: '10px' }} />
+                                        </td>
+                                        <td><div className="mgmt-skeleton mgmt-skeleton-badge" /></td>
+                                        <td>
+                                            <div className="flex gap-2">
+                                                <div className="mgmt-skeleton mgmt-skeleton-btn" />
+                                                <div className="mgmt-skeleton mgmt-skeleton-btn" />
+                                                <div className="mgmt-skeleton mgmt-skeleton-btn" />
+                                            </div>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
                     </div>
                 ) : departments.length === 0 ? (
                     <div className="p-8 text-center">

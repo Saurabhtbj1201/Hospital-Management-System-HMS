@@ -282,9 +282,102 @@ const SlotSettings = () => {
 
     if (loading) {
         return (
-            <div className="as-loading">
-                <div className="spinner-large"></div>
-                <p>Loading slot settings...</p>
+            <div className="admin-slot-settings p-4 lg:p-6">
+                {/* Header skeleton */}
+                <div className="as-header">
+                    <div>
+                        <div className="mgmt-skeleton mgmt-skeleton-text" style={{ width: '180px', height: '22px', marginBottom: '8px' }} />
+                        <div className="mgmt-skeleton mgmt-skeleton-text" style={{ width: '340px', height: '12px' }} />
+                    </div>
+                    <div className="mgmt-skeleton" style={{ width: '90px', height: '34px', borderRadius: '8px' }} />
+                </div>
+
+                {/* Stats row skeleton */}
+                <div className="as-stats-row">
+                    {[...Array(5)].map((_, i) => (
+                        <div key={i} className="as-stat-card">
+                            <div className="mgmt-skeleton" style={{ width: '38px', height: '38px', borderRadius: '9px' }} />
+                            <div>
+                                <div className="mgmt-skeleton mgmt-skeleton-text" style={{ width: '40px', height: '18px', marginBottom: '6px' }} />
+                                <div className="mgmt-skeleton mgmt-skeleton-text" style={{ width: '75px', height: '10px' }} />
+                            </div>
+                        </div>
+                    ))}
+                </div>
+
+                {/* Two column skeleton */}
+                <div className="as-two-col">
+                    <div className="as-col">
+                        {/* Card 1 */}
+                        <div className="as-card">
+                            <div className="as-card-header">
+                                <div className="mgmt-skeleton mgmt-skeleton-text" style={{ width: '160px', height: '16px', marginBottom: '6px' }} />
+                                <div className="mgmt-skeleton mgmt-skeleton-text" style={{ width: '260px', height: '11px' }} />
+                            </div>
+                            <div className="as-card-body">
+                                <div className="as-defaults-grid">
+                                    {[...Array(6)].map((_, i) => (
+                                        <div key={i} className="as-field">
+                                            <div className="mgmt-skeleton mgmt-skeleton-text" style={{ width: '110px', height: '11px', marginBottom: '8px' }} />
+                                            <div className="mgmt-skeleton" style={{ width: '100%', height: '36px', borderRadius: '8px' }} />
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                            <div className="as-card-footer">
+                                <div className="mgmt-skeleton" style={{ width: '110px', height: '34px', borderRadius: '7px' }} />
+                            </div>
+                        </div>
+                        {/* Card 2 */}
+                        <div className="as-card">
+                            <div className="as-card-header">
+                                <div className="mgmt-skeleton mgmt-skeleton-text" style={{ width: '140px', height: '16px', marginBottom: '6px' }} />
+                                <div className="mgmt-skeleton mgmt-skeleton-text" style={{ width: '220px', height: '11px' }} />
+                            </div>
+                            <div className="as-card-body">
+                                <div className="as-schedule-grid">
+                                    {[...Array(7)].map((_, i) => (
+                                        <div key={i} className="mgmt-skeleton" style={{ height: '60px', borderRadius: '8px' }} />
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="as-col">
+                        {/* Calendar card */}
+                        <div className="as-card">
+                            <div className="as-card-header">
+                                <div className="mgmt-skeleton mgmt-skeleton-text" style={{ width: '120px', height: '16px' }} />
+                            </div>
+                            <div className="as-card-body">
+                                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: '4px' }}>
+                                    {[...Array(35)].map((_, i) => (
+                                        <div key={i} className="mgmt-skeleton" style={{ height: '32px', borderRadius: '6px' }} />
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+                        {/* Overrides card */}
+                        <div className="as-card">
+                            <div className="as-card-header">
+                                <div className="mgmt-skeleton mgmt-skeleton-text" style={{ width: '130px', height: '16px', marginBottom: '6px' }} />
+                                <div className="mgmt-skeleton mgmt-skeleton-text" style={{ width: '200px', height: '11px' }} />
+                            </div>
+                            <div className="as-card-body">
+                                {[...Array(3)].map((_, i) => (
+                                    <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '12px 0', borderBottom: '1px solid #f1f5f9' }}>
+                                        <div className="mgmt-skeleton" style={{ width: '42px', height: '48px', borderRadius: '8px' }} />
+                                        <div style={{ flex: 1 }}>
+                                            <div className="mgmt-skeleton mgmt-skeleton-text" style={{ width: '120px', height: '13px', marginBottom: '6px' }} />
+                                            <div className="mgmt-skeleton mgmt-skeleton-text" style={{ width: '80px', height: '10px' }} />
+                                        </div>
+                                        <div className="mgmt-skeleton mgmt-skeleton-btn" />
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         );
     }
