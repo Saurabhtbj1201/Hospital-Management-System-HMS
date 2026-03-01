@@ -363,6 +363,78 @@ exports.doctorCompleteAppointment = async (req, res) => {
     }
 };
 
+// Create appointment by Admin/Receptionist
+exports.createAppointmentByAdmin = async (req, res) => {
+    try {
+        const appointmentData = { ...req.body };
+
+        // Validate required fields
+        const requiredFields = ['fullName', 'gender', 'emailAddress', 'appointmentDate', 'appointmentTime', 'visitType'];
+        for (const field of requiredFields) {
+            if (!appointmentData[field]) {
+                return res.status(400).json({ success: false, message: `${field} is required` });
+            }
+        }
+
+        // Set source and bookedBy based on user role
+        appointmentData.source = req.user.role === 'Admin' ? 'Admin' : 'Walk-in';
+        appointmentData.bookedBy = req.user.role === 'Admin' ? 'Admin Desk' : 'Reception Desk';
+
+        // If doctor is assigned directly, auto-confirm
+        if (appointmentData.doctorAssigned) {
+            appointmentData.appointmentStatus = 'Confirmed';
+        }
+
+        const appointment = new PublicAppointment(appointmentData);
+        await appointment.save();
+
+        // Send confirmation email
+        try {
+            const { sendEmail } = require('../services/awsSesService');
+            const subject = 'Appointment Confirmation';
+            const htmlBody = `
+                <div style="font-family: Arial, sans-serif; padding: 20px; color: #333;">
+                    <h2>Appointment Confirmed</h2>
+                    <p>Dear ${appointment.fullName},</p>
+                    <p>Your appointment has been successfully booked.</p>
+                    <div style="background: #f3f4f6; padding: 15px; border-radius: 8px; margin: 20px 0;">
+                        <p><strong>Appointment ID:</strong> ${appointment.appointmentId}</p>
+                        <p><strong>Date:</strong> ${new Date(appointment.appointmentDate).toLocaleDateString()}</p>
+                        <p><strong>Time:</strong> ${appointment.appointmentTime}</p>
+                        <p><strong>Department:</strong> ${appointment.department || 'General'}</p>
+                    </div>
+                    <p>Please arrive 15 minutes before your scheduled time.</p>
+                </div>
+            `;
+            const body = `Appointment booked. ID: ${appointment.appointmentId}, Date: ${new Date(appointment.appointmentDate).toLocaleDateString()}, Time: ${appointment.appointmentTime}`;
+            await sendEmail(appointment.emailAddress, subject, body, htmlBody);
+        } catch (emailError) {
+            console.error('Failed to send confirmation email:', emailError);
+        }
+
+        console.log(`Appointment created by ${appointmentData.bookedBy}: ${appointment.appointmentId}`);
+
+        res.status(201).json({
+            success: true,
+            message: 'Appointment booked successfully',
+            data: {
+                appointmentId: appointment.appointmentId,
+                patientId: appointment.patientId,
+                appointmentDate: appointment.appointmentDate,
+                appointmentTime: appointment.appointmentTime,
+                bookedBy: appointment.bookedBy
+            }
+        });
+    } catch (error) {
+        console.error('Create appointment by admin error:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Failed to create appointment',
+            error: error.message
+        });
+    }
+};
+
 // Doctor removes self from appointment
 exports.doctorRemoveSelf = async (req, res) => {
     try {

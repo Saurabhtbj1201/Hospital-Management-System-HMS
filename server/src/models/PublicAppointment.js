@@ -155,6 +155,11 @@ const publicAppointmentSchema = new mongoose.Schema({
         type: String,
         enum: ['Website', 'Walk-in', 'Admin'],
         default: 'Website'
+    },
+    bookedBy: {
+        type: String,
+        enum: ['Website', 'Admin Desk', 'Reception Desk'],
+        default: 'Website'
     }
 }, {
     timestamps: true

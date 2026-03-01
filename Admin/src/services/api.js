@@ -104,6 +104,7 @@ export const appointmentsAPI = {
     getAll: (params) => api.get('/admin/appointments', { params }),
     getById: (id) => api.get(`/admin/appointments/${id}`),
     create: (appointmentData) => api.post('/appointments', appointmentData),
+    book: (appointmentData) => api.post('/admin/appointments', appointmentData),
     update: (id, appointmentData) => api.put(`/admin/appointments/${id}`, appointmentData),
     updateStatus: (id, status, reason) => api.patch(`/admin/appointments/${id}/status`, { status, reason }),
     assignDoctor: (id, doctorId) => api.patch(`/admin/appointments/${id}/assign-doctor`, { doctorId }),
@@ -112,6 +113,8 @@ export const appointmentsAPI = {
     confirm: (id) => api.patch(`/appointments/${id}/confirm`),
     cancel: (id) => api.patch(`/appointments/${id}/cancel`),
     complete: (id) => api.patch(`/appointments/${id}/complete`),
+    lookupPatient: (mobile) => api.get(`/public-appointments/lookup-patient?mobile=${mobile}`),
+    getTimeSlots: (date, department) => api.get(`/public-appointments/time-slots?date=${date}&department=${department || ''}`),
     // Doctor-specific
     getMyAppointments: (params) => api.get('/admin/appointments/my-appointments', { params }),
     doctorComplete: (id) => api.patch(`/admin/appointments/${id}/doctor-complete`),

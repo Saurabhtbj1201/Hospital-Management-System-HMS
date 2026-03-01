@@ -1,5 +1,5 @@
 .appointments-page {
-    padding: 24px;
+    padding: 1rem;
 }
 
 .appointments-header {
@@ -93,7 +93,7 @@ th {
 }
 
 td {
-    padding: 16px;
+    padding: 8px 12px;
     border-bottom: 1px solid #f3f4f6;
     font-size: 14px;
 }
@@ -835,6 +835,33 @@ tbody tr:hover {
    ═══════════════════════════════════════════════ */
 
 /* Trigger button in header */
+.appointments-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.book-apt-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    background: #e01372;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    letter-spacing: 0.02em;
+    transition: background 0.15s, box-shadow 0.15s;
+}
+
+.book-apt-btn:hover {
+    background: #cd0763;
+    box-shadow: 0 2px 8px rgba(225, 10, 117, 0.25);
+}
+
 .dl-trigger-btn {
     display: inline-flex;
     align-items: center;
@@ -1067,18 +1094,18 @@ tbody tr:hover {
 }
 .dl-clear-btn {
     padding: 9px 18px;
-    border: 1px solid #e5e7eb;
-    background: #fff;
+    border: 1px solid #e62e2e;
+    background: #fffcfc;
     border-radius: 4px;
     font-size: 13px;
     font-weight: 500;
-    color: #6b7280;
+    color: #e62e2e;
     cursor: pointer;
     transition: all 0.15s;
 }
 .dl-clear-btn:hover {
-    border-color: #ef4444;
-    color: #ef4444;
+    border-color: #de1313;
+    color: #e01e1e;
     background: #fef2f2;
 }
 .dl-download-btn {

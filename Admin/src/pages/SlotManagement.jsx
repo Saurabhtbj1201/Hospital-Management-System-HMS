@@ -269,7 +269,7 @@ const SlotManagement = () => {
     }
 
     return (
-        <div className="slot-management p-4 lg:p-6">
+        <div className="slot-management p-4 lg:p-4">
             {/* Page Header */}
             <div className="slot-header">
                 <div>

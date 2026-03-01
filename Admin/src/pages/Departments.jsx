@@ -454,7 +454,7 @@ const Departments = () => {
     };
 
     return (
-        <div className="p-6">
+        <div className="p-4">
             <div className="flex items-center mb-4 justify-between">
                 <div>
                     <h1 className="text-2xl font-bold text-gray-900">Departments</h1>

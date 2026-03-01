@@ -282,7 +282,7 @@ const SlotSettings = () => {
 
     if (loading) {
         return (
-            <div className="admin-slot-settings p-4 lg:p-6">
+            <div className="admin-slot-settings p-4 lg:p-4">
                 {/* Header skeleton */}
                 <div className="as-header">
                     <div>
@@ -383,7 +383,7 @@ const SlotSettings = () => {
     }
 
     return (
-        <div className="admin-slot-settings p-4 lg:p-6">
+        <div className="admin-slot-settings p-4 lg:p-4">
             {/* Header */}
             <div className="as-header">
                 <div>

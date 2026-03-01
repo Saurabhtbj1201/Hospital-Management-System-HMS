@@ -1,9 +1,5 @@
-/* ============================================
-   PATIENTS PAGE
-   ============================================ */
-
 .patients-page {
-    padding: 24px;
+    padding: 1rem;
 }
 
 /* Header */
@@ -201,9 +197,9 @@
 }
 
 .patients-table td {
-    padding: 14px 16px;
+    padding: 6px 12px;
     border-bottom: 1px solid #f3f4f6;
-    color: #374151;
+    color: #b90b54;
 }
 
 .patients-table tbody tr {
@@ -898,19 +894,19 @@
 }
 .pat-dl-clear-btn {
     padding: 9px 18px;
-    border: 1px solid #e5e7eb;
-    background: #fff;
+    border: 1px solid #ff7878;
+    background: #ff2d2d12;
     border-radius: 4px;
     font-size: 13px;
     font-weight: 500;
-    color: #6b7280;
+    color: #e03535;
     cursor: pointer;
     transition: all 0.15s;
 }
 .pat-dl-clear-btn:hover {
-    border-color: #ef4444;
-    color: #ef4444;
-    background: #fef2f2;
+    border-color: #e91818;
+    color: #ea1919;
+    background: #ffecec;
 }
 .pat-dl-download-btn {
     display: inline-flex;

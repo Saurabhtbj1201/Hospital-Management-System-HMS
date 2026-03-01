@@ -152,7 +152,7 @@ const AdminManagement = () => {
     );
 
     return (
-        <div className="p-6">
+        <div className="p-4">
             <div className="flex items-start justify-between mb-4">
                 <div>
                     <h1 className="text-2xl font-bold text-gray-900 mb-1">Admin Management</h1>

@@ -249,7 +249,7 @@ const AdminProfile = () => {
 
     if (loading) {
         return (
-            <div className="p-4 lg:p-6">
+            <div className="p-4 lg:p-4">
                 {/* Header skeleton */}
                 <div className="flex items-center justify-between mb-4">
                     <div>
@@ -317,7 +317,7 @@ const AdminProfile = () => {
     ];
 
     return (
-        <div className="p-4 lg:p-6">
+        <div className="p-4 lg:p-4">
             {/* Page Header */}
             <div className="flex items-center justify-between mb-4">
                 <div>

@@ -9,12 +9,17 @@ const {
     getAppointmentStats,
     getMyAssignedAppointments,
     doctorCompleteAppointment,
-    doctorRemoveSelf
+    doctorRemoveSelf,
+    createAppointmentByAdmin
 } = require('../controllers/publicAppointmentController');
 const { protect, authorize } = require('../middleware/authMiddleware');
+const { captchaMiddleware } = require('../services/captchaService');
 
 // All routes require authentication
 router.use(protect);
+
+// Create appointment (Admin/Receptionist) - with captcha
+router.post('/', authorize('Admin', 'Receptionist'), captchaMiddleware, createAppointmentByAdmin);
 
 // Doctor routes (must be before /:id routes)
 router.get('/my-appointments', authorize('Doctor'), getMyAssignedAppointments);

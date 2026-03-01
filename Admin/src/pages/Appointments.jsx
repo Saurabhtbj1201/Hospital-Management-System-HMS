@@ -1,9 +1,10 @@
 import { useState, useEffect, useRef } from 'react';
-import { Calendar, Search, Edit2, Eye, UserPlus, Check, X, Clock, RefreshCw, XCircle, CheckCircle, UserMinus, Printer, Download, Filter, ChevronDown, Loader2 } from 'lucide-react';
+import { Calendar, Search, Edit2, Eye, UserPlus, Check, X, Clock, RefreshCw, XCircle, CheckCircle, UserMinus, Printer, Download, Filter, ChevronDown, Loader2, Plus } from 'lucide-react';
 import QRCode from 'qrcode';
 import { appointmentsAPI, doctorsAPI, departmentsAPI, invoiceTemplateAPI } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import { toast } from 'sonner';
+import BookAppointmentModal from './BookAppointmentModal';
 import './Appointments.css';
 
 const Appointments = () => {
@@ -27,6 +28,7 @@ const Appointments = () => {
     const [hospitalTemplate, setHospitalTemplate] = useState(null);
     const [templateLoading, setTemplateLoading] = useState(false);
     const [showDownloadModal, setShowDownloadModal] = useState(false);
+    const [showBookModal, setShowBookModal] = useState(false);
 
     useEffect(() => {
         fetchAppointments();
@@ -182,11 +184,17 @@ const Appointments = () => {
                     <h1>{isDoctor ? 'My Appointments' : 'Appointments Management'}</h1>
                     <p>{isDoctor ? 'View appointments assigned to you' : 'View and manage all patient appointments'}</p>
                 </div>
-                {!isDoctor && (
-                    <button className="dl-trigger-btn" onClick={() => setShowDownloadModal(true)}>
-                        <Download size={16} />
-                        Download
-                    </button>
+                {isAdminOrReceptionist && (
+                    <div className="appointments-header-actions">
+                        <button className="book-apt-btn" onClick={() => setShowBookModal(true)}>
+                            <Plus size={16} />
+                            New Appointment
+                        </button>
+                        <button className="dl-trigger-btn" onClick={() => setShowDownloadModal(true)}>
+                            <Download size={16} />
+                            Download
+                        </button>
+                    </div>
                 )}
             </div>
 
@@ -452,6 +460,14 @@ const Appointments = () => {
                     departments={departments}
                     isDoctor={isDoctor}
                     onClose={() => setShowDownloadModal(false)}
+                />
+            )}
+
+            {showBookModal && (
+                <BookAppointmentModal
+                    onClose={() => setShowBookModal(false)}
+                    onSuccess={() => fetchAppointments()}
+                    userRole={userRole}
                 />
             )}
 
@@ -949,6 +965,12 @@ const AppointmentModal = ({ appointment, type, doctors, departments, userRole, h
                                     <span className="apt-tpl-label">Visit Type:</span>
                                     <span className="apt-tpl-value">{appointment.visitType || 'N/A'}</span>
                                 </div>
+                                {appointment.bookedBy && (
+                                    <div className="apt-tpl-detail">
+                                        <span className="apt-tpl-label">Booked By:</span>
+                                        <span className="apt-tpl-value apt-tpl-value-bold">{appointment.bookedBy}</span>
+                                    </div>
+                                )}
                                 {appointment.primaryConcern && (
                                     <div className="apt-tpl-detail apt-tpl-detail-full">
                                         <span className="apt-tpl-label">Primary Concern:</span>
