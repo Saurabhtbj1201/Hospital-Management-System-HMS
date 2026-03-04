@@ -28,6 +28,7 @@ app.use('/api/profile', require('./routes/profileRoutes'));
 app.use('/api/slot-config', require('./routes/slotConfigRoutes'));
 app.use('/api/invoice-template', require('./routes/invoiceTemplateRoutes'));
 app.use('/api/dashboard', require('./routes/dashboardRoutes'));
+app.use('/api/doctor-dashboard', require('./routes/doctorDashboardRoutes'));
 
 app.get('/', (req, res) => {
     res.send('API is running...');

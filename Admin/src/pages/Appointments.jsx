@@ -232,29 +232,31 @@ const Appointments = () => {
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                 />
-                <input
-                    type="date"
-                    className="date-filter-input"
-                    value={dateFilter}
-                    onChange={(e) => { setDateFilter(e.target.value); setCurrentPage(1); }}
-                    title="Filter by date"
-                />
-                {dateFilter && (
+                <div className="filters-right">
+                    <input
+                        type="date"
+                        className="date-filter-input"
+                        value={dateFilter}
+                        onChange={(e) => { setDateFilter(e.target.value); setCurrentPage(1); }}
+                        title="Filter by date"
+                    />
+                    {dateFilter && (
+                        <button
+                            className="filter-btn clear-date-btn"
+                            onClick={() => setDateFilter('')}
+                            title="Clear date filter"
+                        >
+                            <X size={14} />
+                        </button>
+                    )}
                     <button
-                        className="filter-btn clear-date-btn"
-                        onClick={() => setDateFilter('')}
-                        title="Clear date filter"
+                        className="filter-btn refresh-btn"
+                        onClick={() => { fetchAppointments(); }}
+                        title="Refresh"
                     >
-                        <X size={14} />
+                        <RefreshCw size={16} />
                     </button>
-                )}
-                <button
-                    className="filter-btn refresh-btn"
-                    onClick={() => { fetchAppointments(); }}
-                    title="Refresh"
-                >
-                    <RefreshCw size={16} />
-                </button>
+                </div>
             </div>
 
             {loading ? (

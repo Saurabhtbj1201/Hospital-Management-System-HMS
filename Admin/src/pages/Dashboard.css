@@ -180,12 +180,21 @@
     margin-bottom: 24px;
 }
 
+.charts-row-triple {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 18px;
+    margin-bottom: 24px;
+}
+
 .chart-card {
     background: #fff;
     border: 1px solid #e5e7eb;
     border-radius: 12px;
     padding: 20px;
     transition: box-shadow 0.2s;
+    min-width: 0;
+    overflow: hidden;
 }
 
 .chart-card:hover {
@@ -276,8 +285,9 @@
 .dept-carousel {
     position: relative;
     background: #f8f8f8fc;
-    padding: 2rem;
+    padding: 1rem;
     border-radius: 7.5px;
+    max-width: 100%;
 }
 
 .dept-carousel-viewport {
@@ -310,6 +320,7 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    max-width: 100%;
 }
 
 .dept-card-fee {
@@ -657,6 +668,10 @@
     }
 
     .charts-row-equal {
+        grid-template-columns: 1fr;
+    }
+
+    .charts-row-triple {
         grid-template-columns: 1fr;
     }
 }

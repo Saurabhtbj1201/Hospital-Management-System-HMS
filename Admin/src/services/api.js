@@ -151,6 +151,16 @@ export const dashboardAPI = {
     getActivityFeed: () => api.get('/dashboard/activity'),
 };
 
+// Doctor Dashboard
+export const doctorDashboardAPI = {
+    getStats: () => api.get('/doctor-dashboard/stats'),
+    getRecentAppointments: () => api.get('/doctor-dashboard/appointments'),
+    getTodayAppointments: () => api.get('/doctor-dashboard/today'),
+    getChartData: (type) => api.get(`/doctor-dashboard/charts/${type}`),
+    getProfile: () => api.get('/doctor-dashboard/profile'),
+    getActivity: () => api.get('/doctor-dashboard/activity'),
+};
+
 // Settings
 export const settingsAPI = {
     get: () => api.get('/settings'),

@@ -26,6 +26,14 @@
     gap: 12px;
     margin-bottom: 20px;
     flex-wrap: wrap;
+    align-items: center;
+}
+
+.filters-right {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    margin-left: auto;
 }
 
 .filter-group {

@@ -1220,7 +1220,8 @@ const Billing = () => {
                                                 <button
                                                     className="action-btn action-btn-generate with-label"
                                                     onClick={() => setGenerateModal(item)}
-                                                    title="Generate Invoice"
+                                                    title={item.appointmentStatus === 'Cancelled' ? 'Cannot generate invoice for cancelled appointment' : 'Generate Invoice'}
+                                                    disabled={item.appointmentStatus === 'Cancelled'}
                                                 >
                                                     <FileText size={14} /> Generate
                                                 </button>

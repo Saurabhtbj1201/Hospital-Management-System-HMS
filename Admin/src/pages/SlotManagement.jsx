@@ -261,9 +261,135 @@ const SlotManagement = () => {
 
     if (loading) {
         return (
-            <div className="slot-mgmt-loading">
-                <div className="spinner-large"></div>
-                <p>Loading configuration...</p>
+            <div className="slot-management p-4 lg:p-4">
+                {/* Header Skeleton */}
+                <div className="slot-header">
+                    <div>
+                        <div className="slot-sk slot-sk-text" style={{ width: 200, height: 28 }} />
+                        <div className="slot-sk slot-sk-text" style={{ width: 360, height: 14, marginTop: 8 }} />
+                    </div>
+                </div>
+
+                <div className="slot-two-col">
+                    {/* Left Column */}
+                    <div className="slot-left-col">
+                        {/* Calendar Card Skeleton */}
+                        <div className="slot-card">
+                            <div className="slot-card-header">
+                                <div className="slot-sk slot-sk-text" style={{ width: 180, height: 20 }} />
+                            </div>
+                            {/* Nav */}
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 16px' }}>
+                                <div className="slot-sk" style={{ width: 32, height: 32, borderRadius: 8 }} />
+                                <div className="slot-sk slot-sk-text" style={{ width: 140, height: 18 }} />
+                                <div className="slot-sk" style={{ width: 32, height: 32, borderRadius: 8 }} />
+                            </div>
+                            {/* Legend */}
+                            <div style={{ display: 'flex', gap: 16, padding: '8px 16px', flexWrap: 'wrap' }}>
+                                {[80, 60, 65, 70, 90].map((w, i) => (
+                                    <div key={i} className="slot-sk slot-sk-text" style={{ width: w, height: 12 }} />
+                                ))}
+                            </div>
+                            {/* Calendar Grid 7x6 */}
+                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: 4, padding: '8px 16px 16px' }}>
+                                {['S','M','T','W','T','F','S'].map((d, i) => (
+                                    <div key={i} style={{ textAlign: 'center', fontSize: '0.75rem', color: '#cbd5e1', fontWeight: 600, padding: 4 }}>{d}</div>
+                                ))}
+                                {Array.from({ length: 35 }).map((_, i) => (
+                                    <div key={i} className="slot-sk" style={{ height: 38, borderRadius: 8 }} />
+                                ))}
+                            </div>
+                        </div>
+
+                        {/* Working Schedule Card Skeleton */}
+                        <div className="slot-card">
+                            <div className="slot-card-header">
+                                <div className="slot-sk slot-sk-text" style={{ width: 170, height: 20 }} />
+                                <div className="slot-sk slot-sk-text" style={{ width: 260, height: 12, marginTop: 6 }} />
+                            </div>
+                            <div style={{ padding: '0 16px 16px', display: 'flex', flexDirection: 'column', gap: 10 }}>
+                                {Array.from({ length: 7 }).map((_, i) => (
+                                    <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 12px', background: '#f8f9fa', borderRadius: 10 }}>
+                                        <div className="slot-sk" style={{ width: 36, height: 20, borderRadius: 10 }} />
+                                        <div className="slot-sk slot-sk-text" style={{ width: 80, height: 14 }} />
+                                        <div style={{ marginLeft: 'auto', display: 'flex', gap: 8 }}>
+                                            <div className="slot-sk" style={{ width: 70, height: 28, borderRadius: 6 }} />
+                                            <div className="slot-sk slot-sk-text" style={{ width: 16, height: 14 }} />
+                                            <div className="slot-sk" style={{ width: 70, height: 28, borderRadius: 6 }} />
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                            <div style={{ padding: '12px 16px', borderTop: '1px solid #f0f0f0', display: 'flex', justifyContent: 'flex-end' }}>
+                                <div className="slot-sk" style={{ width: 130, height: 36, borderRadius: 8 }} />
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Right Column */}
+                    <div className="slot-right-col">
+                        {/* Booking Rules Card Skeleton */}
+                        <div className="slot-card">
+                            <div className="slot-card-header">
+                                <div className="slot-sk slot-sk-text" style={{ width: 150, height: 20 }} />
+                                <div className="slot-sk slot-sk-text" style={{ width: 280, height: 12, marginTop: 6 }} />
+                            </div>
+                            <div style={{ padding: '0 16px 16px', display: 'flex', flexDirection: 'column', gap: 20 }}>
+                                {/* Rule 1 - Slider */}
+                                <div>
+                                    <div className="slot-sk slot-sk-text" style={{ width: 220, height: 14 }} />
+                                    <div className="slot-sk slot-sk-text" style={{ width: 300, height: 11, marginTop: 6 }} />
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginTop: 10 }}>
+                                        <div className="slot-sk" style={{ flex: 1, height: 6, borderRadius: 3 }} />
+                                        <div className="slot-sk" style={{ width: 50, height: 24, borderRadius: 6 }} />
+                                    </div>
+                                </div>
+                                {/* Rule 2 - Time Input */}
+                                <div>
+                                    <div className="slot-sk slot-sk-text" style={{ width: 190, height: 14 }} />
+                                    <div className="slot-sk slot-sk-text" style={{ width: 240, height: 11, marginTop: 6 }} />
+                                    <div className="slot-sk" style={{ width: 140, height: 36, borderRadius: 8, marginTop: 10 }} />
+                                </div>
+                                {/* Rule 3 - Read only */}
+                                <div>
+                                    <div className="slot-sk slot-sk-text" style={{ width: 170, height: 14 }} />
+                                    <div className="slot-sk slot-sk-text" style={{ width: 280, height: 11, marginTop: 6 }} />
+                                </div>
+                                {/* Info Box */}
+                                <div className="slot-sk" style={{ height: 56, borderRadius: 10 }} />
+                            </div>
+                            <div style={{ padding: '12px 16px', borderTop: '1px solid #f0f0f0', display: 'flex', justifyContent: 'flex-end' }}>
+                                <div className="slot-sk" style={{ width: 120, height: 36, borderRadius: 8 }} />
+                            </div>
+                        </div>
+
+                        {/* Date Overrides Card Skeleton */}
+                        <div className="slot-card">
+                            <div className="slot-card-header">
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
+                                    <div className="slot-sk slot-sk-text" style={{ width: 155, height: 20 }} />
+                                    <div className="slot-sk" style={{ width: 100, height: 30, borderRadius: 8 }} />
+                                </div>
+                                <div className="slot-sk slot-sk-text" style={{ width: 270, height: 12, marginTop: 6 }} />
+                            </div>
+                            <div style={{ padding: '0 16px 16px', display: 'flex', flexDirection: 'column', gap: 10 }}>
+                                {Array.from({ length: 3 }).map((_, i) => (
+                                    <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: 12, background: '#f8f9fa', borderRadius: 10 }}>
+                                        <div className="slot-sk" style={{ width: 44, height: 50, borderRadius: 8 }} />
+                                        <div style={{ flex: 1 }}>
+                                            <div className="slot-sk slot-sk-text" style={{ width: 160, height: 13 }} />
+                                            <div className="slot-sk slot-sk-text" style={{ width: 100, height: 11, marginTop: 6 }} />
+                                        </div>
+                                        <div style={{ display: 'flex', gap: 6 }}>
+                                            <div className="slot-sk" style={{ width: 30, height: 30, borderRadius: 6 }} />
+                                            <div className="slot-sk" style={{ width: 30, height: 30, borderRadius: 6 }} />
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         );
     }

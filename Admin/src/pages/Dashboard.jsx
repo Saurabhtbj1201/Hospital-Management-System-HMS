@@ -225,8 +225,8 @@ const Dashboard = () => {
     // ── Loading State ──
     if (loading) {
         return (
-            <div className="dashboard p-4">
-                <div className="dashboard-header">
+            <div className="admin-dashboard">
+                <div className="admin-dashboard-header">
                     <div>
                         <div className="skeleton" style={{ width: 260, height: 26, marginBottom: 8 }} />
                         <div className="skeleton" style={{ width: 200, height: 16 }} />
@@ -237,7 +237,17 @@ const Dashboard = () => {
                         <div key={i} className="skeleton skeleton-card" />
                     ))}
                 </div>
-                <div className="charts-row">
+                <div className="charts-row-triple">
+                    <div className="skeleton skeleton-chart" />
+                    <div className="skeleton skeleton-chart" />
+                    <div className="skeleton skeleton-chart" />
+                </div>
+                <div className="charts-row-triple">
+                    <div className="skeleton skeleton-chart" />
+                    <div className="skeleton skeleton-chart" />
+                    <div className="skeleton skeleton-chart" />
+                </div>
+                <div className="bottom-grid">
                     <div className="skeleton skeleton-chart" />
                     <div className="skeleton skeleton-chart" />
                 </div>
@@ -294,8 +304,8 @@ const Dashboard = () => {
                 })}
             </div>
 
-            {/* ── Row 1: Appointments Bar Chart + Appointment Status Pie ── */}
-            <div className="charts-row">
+            {/* ── Row 1: Appointments Overview + Status + Sources ── */}
+            <div className="charts-row-triple">
                 {/* Appointments Trend */}
                 <div className="chart-card">
                     <div className="chart-card-header">
@@ -393,43 +403,8 @@ const Dashboard = () => {
                         ))}
                     </div>
                 </div>
-            </div>
 
-            {/* ── Row 2: Revenue Area Chart + Sources Pie ── */}
-            <div className="charts-row">
-                <div className="chart-card">
-                    <div className="chart-card-header">
-                        <div>
-                            <div className="chart-card-title">Revenue Trend</div>
-                            <div className="chart-card-subtitle">Monthly billing & collection</div>
-                        </div>
-                    </div>
-                    <div style={{ height: 260 }}>
-                        <ResponsiveContainer width="100%" height="100%">
-                            <AreaChart data={monthlyRevenue}>
-                                <defs>
-                                    <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
-                                        <stop offset="5%" stopColor="#6366f1" stopOpacity={0.15} />
-                                        <stop offset="95%" stopColor="#6366f1" stopOpacity={0} />
-                                    </linearGradient>
-                                    <linearGradient id="colorCollected" x1="0" y1="0" x2="0" y2="1">
-                                        <stop offset="5%" stopColor="#22c55e" stopOpacity={0.15} />
-                                        <stop offset="95%" stopColor="#22c55e" stopOpacity={0} />
-                                    </linearGradient>
-                                </defs>
-                                <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" />
-                                <XAxis dataKey="name" tick={{ fontSize: 11, fill: '#9ca3af' }} axisLine={false} tickLine={false} />
-                                <YAxis tick={{ fontSize: 11, fill: '#9ca3af' }} axisLine={false} tickLine={false} tickFormatter={(v) => v >= 1000 ? `${v / 1000}K` : v} />
-                                <Tooltip content={<CustomTooltip />} />
-                                <Legend iconType="circle" iconSize={8} wrapperStyle={{ fontSize: 11, paddingTop: 8 }} />
-                                <Area type="monotone" dataKey="revenue" name="Billed" stroke="#6366f1" strokeWidth={2} fill="url(#colorRevenue)" />
-                                <Area type="monotone" dataKey="collected" name="Collected" stroke="#22c55e" strokeWidth={2} fill="url(#colorCollected)" />
-                            </AreaChart>
-                        </ResponsiveContainer>
-                    </div>
-                </div>
-
-                {/* Sources Pie */}
+                {/* Appointment Sources */}
                 <div className="chart-card">
                     <div className="chart-card-header">
                         <div>
@@ -480,32 +455,37 @@ const Dashboard = () => {
                 </div>
             </div>
 
-            {/* ── Row 3: Department Distribution Bar + Department Carousel ── */}
-            <div className="charts-row-equal" style={{ marginBottom: 0 }}>
-                {/* Department Distribution */}
+            {/* ── Row 2: Revenue Trend + Departments + Dept Distribution ── */}
+            <div className="charts-row-triple">
+                {/* Revenue Trend */}
                 <div className="chart-card">
                     <div className="chart-card-header">
                         <div>
-                            <div className="chart-card-title">Department Distribution</div>
-                            <div className="chart-card-subtitle">Appointments per department</div>
+                            <div className="chart-card-title">Revenue Trend</div>
+                            <div className="chart-card-subtitle">Monthly billing & collection</div>
                         </div>
                     </div>
-                    <div style={{ height: 280 }}>
+                    <div style={{ height: 260 }}>
                         <ResponsiveContainer width="100%" height="100%">
-                            <BarChart data={deptDistribution} layout="vertical" margin={{ left: 10 }}>
-                                <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" horizontal={false} />
-                                <XAxis type="number" tick={{ fontSize: 11, fill: '#9ca3af' }} axisLine={false} tickLine={false} />
-                                <YAxis
-                                    type="category"
-                                    dataKey="name"
-                                    tick={{ fontSize: 11, fill: '#6b7280' }}
-                                    axisLine={false}
-                                    tickLine={false}
-                                    width={110}
-                                />
+                            <AreaChart data={monthlyRevenue}>
+                                <defs>
+                                    <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
+                                        <stop offset="5%" stopColor="#6366f1" stopOpacity={0.15} />
+                                        <stop offset="95%" stopColor="#6366f1" stopOpacity={0} />
+                                    </linearGradient>
+                                    <linearGradient id="colorCollected" x1="0" y1="0" x2="0" y2="1">
+                                        <stop offset="5%" stopColor="#22c55e" stopOpacity={0.15} />
+                                        <stop offset="95%" stopColor="#22c55e" stopOpacity={0} />
+                                    </linearGradient>
+                                </defs>
+                                <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" />
+                                <XAxis dataKey="name" tick={{ fontSize: 11, fill: '#9ca3af' }} axisLine={false} tickLine={false} />
+                                <YAxis tick={{ fontSize: 11, fill: '#9ca3af' }} axisLine={false} tickLine={false} tickFormatter={(v) => v >= 1000 ? `${v / 1000}K` : v} />
                                 <Tooltip content={<CustomTooltip />} />
-                                <Bar dataKey="value" name="Appointments" fill="#8b5cf6" radius={[0, 4, 4, 0]} barSize={22} />
-                            </BarChart>
+                                <Legend iconType="circle" iconSize={8} wrapperStyle={{ fontSize: 11, paddingTop: 8 }} />
+                                <Area type="monotone" dataKey="revenue" name="Billed" stroke="#6366f1" strokeWidth={2} fill="url(#colorRevenue)" />
+                                <Area type="monotone" dataKey="collected" name="Collected" stroke="#22c55e" strokeWidth={2} fill="url(#colorCollected)" />
+                            </AreaChart>
                         </ResponsiveContainer>
                     </div>
                 </div>
@@ -533,11 +513,11 @@ const Dashboard = () => {
                                     key={dept._id || i}
                                     className={`dept-card-slide ${i === carouselIndex ? 'active' : ''}`}
                                 >
-                                    <div className="flex items-center gap-2.5 mb-3">
-                                        <div className="stat-card-icon violet" style={{ width: 34, height: 34, borderRadius: 9 }}>
+                                    <div className="flex items-center gap-2.5 mb-3" style={{ minWidth: 0 }}>
+                                        <div className="stat-card-icon violet" style={{ width: 34, height: 34, borderRadius: 9, flexShrink: 0 }}>
                                             <Building2 className="w-4 h-4" />
                                         </div>
-                                        <div>
+                                        <div style={{ minWidth: 0, overflow: 'hidden' }}>
                                             <div className="dept-card-name">{dept.name}</div>
                                             <div className="dept-card-fee">₹{dept.consultationFee || 0} consultation</div>
                                         </div>
@@ -587,9 +567,37 @@ const Dashboard = () => {
                         )}
                     </div>
                 </div>
+
+                {/* Department Distribution */}
+                <div className="chart-card">
+                    <div className="chart-card-header">
+                        <div>
+                            <div className="chart-card-title">Department Distribution</div>
+                            <div className="chart-card-subtitle">Appointments per department</div>
+                        </div>
+                    </div>
+                    <div style={{ height: 280 }}>
+                        <ResponsiveContainer width="100%" height="100%">
+                            <BarChart data={deptDistribution} layout="vertical" margin={{ left: 10 }}>
+                                <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" horizontal={false} />
+                                <XAxis type="number" tick={{ fontSize: 11, fill: '#9ca3af' }} axisLine={false} tickLine={false} />
+                                <YAxis
+                                    type="category"
+                                    dataKey="name"
+                                    tick={{ fontSize: 11, fill: '#6b7280' }}
+                                    axisLine={false}
+                                    tickLine={false}
+                                    width={110}
+                                />
+                                <Tooltip content={<CustomTooltip />} />
+                                <Bar dataKey="value" name="Appointments" fill="#8b5cf6" radius={[0, 4, 4, 0]} barSize={22} />
+                            </BarChart>
+                        </ResponsiveContainer>
+                    </div>
+                </div>
             </div>
 
-            {/* ── Row 4: Recent Appointments + Activity Feed ── */}
+            {/* ── Row 3: Recent Appointments + Activity Feed ── */}
             <div className="bottom-grid" style={{ marginTop: 18 }}>
                 {/* Recent Appointments Table */}
                 <div className="chart-card">
@@ -665,7 +673,7 @@ const Dashboard = () => {
                         </div>
                         <Activity className="w-4 h-4 text-gray-400" />
                     </div>
-                    <div className="activity-feed" style={{ maxHeight: 420, overflowY: 'auto' }}>
+                    <div className="activity-feed" style={{ maxHeight: 650, overflowY: 'auto' }}>
                         {activityFeed.length > 0 ? activityFeed.map((item, i) => {
                             const iconMap = {
                                 appointment: Calendar,
