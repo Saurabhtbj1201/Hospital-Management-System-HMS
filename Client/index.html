@@ -1,16 +1,267 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr" prefix="og: https://ogp.me/ns#">
 
 <head>
+    <!-- ═══════════════════════════════════════════════════════════════
+         Lifebridge Medical Center — https://hms.gu-saurabh.site/
+         Premier Multi-Specialty Hospital · New Delhi, India
+         Developed by Saurabh · https://gu-saurabh.site
+    ═══════════════════════════════════════════════════════════════ -->
+
+    <!-- === Core Meta === -->
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.png" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>HMS Portal - Book Your Appointment</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+
+    <!-- === SEO: Title & Description === -->
+    <title>Lifebridge Medical Center — Premier Multi-Specialty Hospital in New Delhi | 24/7 Emergency Care</title>
     <meta name="description"
-        content="Book your hospital appointment online with HMS Portal. Quick, easy, and secure appointment booking system." />
+        content="Lifebridge Medical Center — Award-winning multi-specialty hospital in New Delhi with 500+ expert doctors, 15+ departments, AI-powered health tools, online appointment booking, and 24/7 emergency care. Your Health, Our Priority." />
+    <meta name="keywords"
+        content="Lifebridge Medical Center, hospital New Delhi, multi-specialty hospital, healthcare, doctor appointment online, emergency care 24/7, cardiology, neurology, orthopedics, pediatrics, oncology, dermatology, gynecology, ophthalmology, ENT, pulmonology, gastroenterology, urology, general medicine, AI symptom checker, health blog, patient services, medical center India, best hospital Delhi, online doctor consultation, hospital near me" />
+    <meta name="author" content="Saurabh — https://gu-saurabh.site" />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <meta name="googlebot" content="index, follow" />
+    <meta name="bingbot" content="index, follow" />
+    <meta name="revisit-after" content="3 days" />
+    <meta name="rating" content="general" />
+    <meta name="distribution" content="global" />
+    <meta name="language" content="en" />
+    <meta name="geo.region" content="IN-DL" />
+    <meta name="geo.placename" content="New Delhi" />
+    <meta name="geo.position" content="28.6139;77.2090" />
+    <meta name="ICBM" content="28.6139, 77.2090" />
+
+    <!-- === Canonical & Alternate === -->
+    <link rel="canonical" href="https://hms.gu-saurabh.site/" />
+
+    <!-- === Theme & Colors === -->
+    <meta name="theme-color" content="#7C3AED" />
+    <meta name="msapplication-TileColor" content="#7C3AED" />
+    <meta name="msapplication-navbutton-color" content="#7C3AED" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="Lifebridge Medical" />
+    <meta name="application-name" content="Lifebridge Medical Center" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="format-detection" content="telephone=yes" />
+
+    <!-- === Favicons === -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png" />
+    <link rel="icon" type="image/png" sizes="512x512" href="/icon-512.png" />
+    <link rel="apple-touch-icon" sizes="192x192" href="/icon-192.png" />
+    <link rel="mask-icon" href="/favicon.svg" color="#7C3AED" />
+    <meta name="msapplication-config" content="/browserconfig.xml" />
+
+    <!-- === PWA Manifest === -->
+    <link rel="manifest" href="/manifest.json" />
+
+    <!-- === Open Graph (Facebook, LinkedIn, WhatsApp) === -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Lifebridge Medical Center" />
+    <meta property="og:title" content="Lifebridge Medical Center — Premier Multi-Specialty Hospital in New Delhi" />
+    <meta property="og:description"
+        content="Award-winning healthcare with 500+ doctors, 15+ departments, AI health tools, online appointment booking & 24/7 emergency care. Your Health, Our Priority." />
+    <meta property="og:url" content="https://hms.gu-saurabh.site/" />
+    <meta property="og:image" content="https://hms.gu-saurabh.site/og-image.svg" />
+    <meta property="og:image:alt" content="Lifebridge Medical Center — Your Health, Our Priority" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:locale" content="en_IN" />
+
+    <!-- === Twitter Card === -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Lifebridge Medical Center — Premier Multi-Specialty Hospital" />
+    <meta name="twitter:description"
+        content="500+ doctors, 15+ departments, AI-powered health tools, online appointments & 24/7 emergency care in New Delhi." />
+    <meta name="twitter:image" content="https://hms.gu-saurabh.site/og-image.svg" />
+    <meta name="twitter:image:alt" content="Lifebridge Medical Center — Your Health, Our Priority" />
+
+    <!-- === Sitemap & Feed === -->
+    <link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml" />
+
+    <!-- === DNS Prefetch & Preconnect === -->
+    <link rel="dns-prefetch" href="//fonts.googleapis.com" />
+    <link rel="dns-prefetch" href="//fonts.gstatic.com" />
+    <link rel="dns-prefetch" href="//www.google.com" />
+    <link rel="dns-prefetch" href="//maps.google.com" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <!-- === Google Fonts: Inter + Poppins === -->
+    <link rel="preload" as="style"
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Poppins:wght@400;500;600;700;800;900&display=swap" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Poppins:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet" />
+
+    <!-- === Schema.org JSON-LD: Hospital === -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Hospital",
+        "@id": "https://hms.gu-saurabh.site/#hospital",
+        "name": "Lifebridge Medical Center",
+        "alternateName": "Lifebridge Hospital",
+        "description": "Premier multi-specialty hospital in New Delhi offering 15+ departments, 500+ expert doctors, AI-powered health tools, online appointment booking, and 24/7 emergency care.",
+        "url": "https://hms.gu-saurabh.site/",
+        "logo": "https://hms.gu-saurabh.site/favicon.svg",
+        "image": "https://hms.gu-saurabh.site/og-image.svg",
+        "telephone": "+91-9876543210",
+        "email": "info@lifebridgemedical.com",
+        "priceRange": "$$",
+        "currenciesAccepted": "INR",
+        "paymentAccepted": "Cash, Credit Card, Debit Card, UPI, Insurance",
+        "address": {
+            "@type": "PostalAddress",
+            "streetAddress": "123 Healthcare Avenue, Medical District",
+            "addressLocality": "New Delhi",
+            "addressRegion": "Delhi",
+            "postalCode": "110001",
+            "addressCountry": "IN"
+        },
+        "geo": {
+            "@type": "GeoCoordinates",
+            "latitude": 28.6139,
+            "longitude": 77.2090
+        },
+        "openingHoursSpecification": [
+            {
+                "@type": "OpeningHoursSpecification",
+                "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+                "opens": "08:00",
+                "closes": "20:00"
+            },
+            {
+                "@type": "OpeningHoursSpecification",
+                "dayOfWeek": "Saturday",
+                "opens": "09:00",
+                "closes": "17:00"
+            },
+            {
+                "@type": "OpeningHoursSpecification",
+                "dayOfWeek": "Sunday",
+                "opens": "10:00",
+                "closes": "14:00"
+            }
+        ],
+        "hasMap": "https://maps.google.com/?q=28.6139,77.2090",
+        "sameAs": [
+            "https://facebook.com/lifebridgemedical",
+            "https://twitter.com/lifebridgemed",
+            "https://instagram.com/lifebridgemedical",
+            "https://linkedin.com/company/lifebridgemedical",
+            "https://youtube.com/@lifebridgemedical"
+        ],
+        "medicalSpecialty": [
+            "Cardiology",
+            "Neurology",
+            "Orthopedics",
+            "Pediatrics",
+            "Oncology",
+            "Dermatology",
+            "Gynecology",
+            "Ophthalmology",
+            "Otolaryngology",
+            "Pulmonology",
+            "Gastroenterology",
+            "Urology",
+            "GeneralPractice",
+            "EmergencyMedicine"
+        ],
+        "availableService": [
+            {
+                "@type": "MedicalProcedure",
+                "name": "Online Appointment Booking"
+            },
+            {
+                "@type": "MedicalProcedure",
+                "name": "24/7 Emergency Care"
+            },
+            {
+                "@type": "MedicalProcedure",
+                "name": "AI Symptom Checker"
+            }
+        ],
+        "areaServed": {
+            "@type": "City",
+            "name": "New Delhi"
+        },
+        "isAccessibleForFree": false,
+        "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": "4.8",
+            "reviewCount": "15000",
+            "bestRating": "5",
+            "worstRating": "1"
+        },
+        "numberOfEmployees": {
+            "@type": "QuantitativeValue",
+            "value": 500
+        }
+    }
+    </script>
+
+    <!-- === Schema.org JSON-LD: WebSite with SearchAction === -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "@id": "https://hms.gu-saurabh.site/#website",
+        "name": "Lifebridge Medical Center",
+        "url": "https://hms.gu-saurabh.site/",
+        "description": "Official website of Lifebridge Medical Center — Premier Multi-Specialty Hospital in New Delhi",
+        "publisher": {
+            "@type": "Organization",
+            "name": "Lifebridge Medical Center",
+            "logo": {
+                "@type": "ImageObject",
+                "url": "https://hms.gu-saurabh.site/favicon.svg"
+            }
+        },
+        "inLanguage": "en-IN",
+        "potentialAction": {
+            "@type": "SearchAction",
+            "target": {
+                "@type": "EntryPoint",
+                "urlTemplate": "https://hms.gu-saurabh.site/doctors?search={search_term_string}"
+            },
+            "query-input": "required name=search_term_string"
+        }
+    }
+    </script>
+
+    <!-- === Schema.org JSON-LD: BreadcrumbList === -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://hms.gu-saurabh.site/" },
+            { "@type": "ListItem", "position": 2, "name": "About Us", "item": "https://hms.gu-saurabh.site/about" },
+            { "@type": "ListItem", "position": 3, "name": "Departments", "item": "https://hms.gu-saurabh.site/departments" },
+            { "@type": "ListItem", "position": 4, "name": "Doctors", "item": "https://hms.gu-saurabh.site/doctors" },
+            { "@type": "ListItem", "position": 5, "name": "Services", "item": "https://hms.gu-saurabh.site/services" },
+            { "@type": "ListItem", "position": 6, "name": "Book Appointment", "item": "https://hms.gu-saurabh.site/book-appointment" },
+            { "@type": "ListItem", "position": 7, "name": "Contact", "item": "https://hms.gu-saurabh.site/contact" },
+            { "@type": "ListItem", "position": 8, "name": "Emergency", "item": "https://hms.gu-saurabh.site/emergency" }
+        ]
+    }
+    </script>
 </head>
 
-<body>
+<body class="antialiased">
+    <!-- === No-JS Fallback === -->
+    <noscript>
+        <div style="padding:2rem;text-align:center;font-family:system-ui,sans-serif;background:#7C3AED;color:white;">
+            <h1>Lifebridge Medical Center</h1>
+            <p>JavaScript is required to use this application. Please enable JavaScript in your browser settings.</p>
+            <p>For emergencies, call <a href="tel:108" style="color:#C4B5FD;font-weight:bold;">108</a> or <a href="tel:+919876543210" style="color:#C4B5FD;font-weight:bold;">+91-9876543210</a></p>
+        </div>
+    </noscript>
+
+    <!-- === React Root === -->
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
 </body>

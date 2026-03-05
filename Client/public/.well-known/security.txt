@@ -1,0 +1,11 @@
+Contact: mailto:info@lifebridgemedical.com
+Contact: tel:+91-9798024301
+Expires: 2027-03-05T00:00:00.000Z
+Preferred-Languages: en
+Canonical: https://hms.gu-saurabh.site/.well-known/security.txt
+Policy: https://hms.gu-saurabh.site/privacy
+Hiring: https://hms.gu-saurabh.site/contact
+
+# Lifebridge Medical Center — Security Contact
+# If you discover a security vulnerability, please contact us
+# responsibly at the email address above.

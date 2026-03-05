@@ -1,0 +1,15 @@
+# Robots.txt — Lifebridge Medical Center
+# https://hms.gu-saurabh.site/
+
+User-agent: *
+Allow: /
+
+# Disallow admin/internal paths
+Disallow: /api/
+Disallow: /appointment-confirmation
+
+# Crawl-delay (be polite)
+Crawl-delay: 1
+
+# Sitemap
+Sitemap: https://hms.gu-saurabh.site/sitemap.xml

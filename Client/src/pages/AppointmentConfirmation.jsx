@@ -1,192 +1,161 @@
 import { Link, useLocation, Navigate } from 'react-router-dom';
-import { FaCheck, FaUserMd, FaCalendar, FaClock, FaUser, FaPhone, FaEnvelope, FaMapMarkerAlt, FaHeartbeat, FaArrowLeft } from 'react-icons/fa';
-import './AppointmentBooking.css';
+import { motion } from 'framer-motion';
+import {
+  CheckCircle2, User, Calendar, HeartPulse, MapPin,
+  Home, CalendarPlus, Download,
+} from 'lucide-react';
+import PageHeader from '../components/ui/PageHeader';
+import Button from '../components/ui/Button';
+import { appointmentAPI } from '../services/api';
+import { cn } from '../lib/cn';
 
-const AppointmentConfirmation = () => {
-    const location = useLocation();
-    const { appointment, formData } = location.state || {};
+export default function AppointmentConfirmation() {
+  const location = useLocation();
+  const { appointment, formData } = location.state || {};
 
-    // Redirect if no data (direct URL access)
-    if (!appointment || !formData) {
-        return <Navigate to="/book-appointment" replace />;
-    }
+  if (!appointment || !formData) {
+    return <Navigate to="/book-appointment" replace />;
+  }
 
-    return (
-        <div className="appointment-page">
-            <header className="header">
-                <div className="container">
-                    <div className="header-content">
-                        <Link to="/" className="logo">
-                            <FaUserMd className="logo-icon" />
-                            <span>HMS Portal</span>
-                        </Link>
-                        <Link to="/" className="btn btn-outline">
-                            <FaArrowLeft />
-                            Back to Home
-                        </Link>
-                    </div>
-                </div>
-            </header>
+  return (
+    <>
+      <PageHeader
+        title="Appointment Confirmed"
+        subtitle="Your appointment has been successfully booked."
+        breadcrumbs={[
+          { label: 'Home', path: '/' },
+          { label: 'Book Appointment', path: '/book-appointment' },
+          { label: 'Confirmation' },
+        ]}
+      />
 
-            <div className="confirmation-container">
-                <div className="container">
-                    <div className="confirmation-card">
-                        <div className="confirmation-header">
-                            <div className="success-icon-large">
-                                <FaCheck />
-                            </div>
-                            <h1>Appointment Booked Successfully!</h1>
-                            <p>Your appointment has been confirmed. Details are shown below.</p>
-                        </div>
-
-                        <div className="id-badge-row">
-                            <div className="id-badge">
-                                <span className="id-label">Appointment ID</span>
-                                <span className="id-value">{appointment.appointmentId}</span>
-                            </div>
-                            <div className="id-badge">
-                                <span className="id-label">Patient ID</span>
-                                <span className="id-value">{appointment.patientId}</span>
-                            </div>
-                        </div>
-
-                        <div className="confirmation-details">
-                            <div className="detail-section">
-                                <h3><FaUser /> Personal Details</h3>
-                                <div className="detail-grid">
-                                    <div className="detail-item">
-                                        <span className="detail-label">Patient's Name</span>
-                                        <span className="detail-value">{formData.patientName}</span>
-                                    </div>
-                                    <div className="detail-item">
-                                        <span className="detail-label">Gender</span>
-                                        <span className="detail-value">{formData.gender}</span>
-                                    </div>
-                                    <div className="detail-item">
-                                        <span className="detail-label">{formData.useAge ? 'Age' : 'Date of Birth'}</span>
-                                        <span className="detail-value">
-                                            {formData.useAge
-                                                ? `${formData.ageYears} years${formData.ageMonths ? ` ${formData.ageMonths} months` : ''}`
-                                                : formData.dateOfBirth}
-                                        </span>
-                                    </div>
-                                    <div className="detail-item">
-                                        <span className="detail-label">Mobile Number</span>
-                                        <span className="detail-value">{formData.mobileNumber}</span>
-                                    </div>
-                                    <div className="detail-item">
-                                        <span className="detail-label">Email Address</span>
-                                        <span className="detail-value">{formData.emailAddress}</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div className="detail-section">
-                                <h3><FaCalendar /> Appointment Details</h3>
-                                <div className="detail-grid">
-                                    {formData.department && (
-                                        <div className="detail-item">
-                                            <span className="detail-label">Department</span>
-                                            <span className="detail-value">{formData.department}</span>
-                                        </div>
-                                    )}
-                                    <div className="detail-item">
-                                        <span className="detail-label">Date</span>
-                                        <span className="detail-value">
-                                            {new Date(formData.appointmentDate).toLocaleDateString('en-US', {
-                                                year: 'numeric', month: 'long', day: 'numeric'
-                                            })}
-                                        </span>
-                                    </div>
-                                    <div className="detail-item">
-                                        <span className="detail-label">Time</span>
-                                        <span className="detail-value">{formData.appointmentTime}</span>
-                                    </div>
-                                    <div className="detail-item">
-                                        <span className="detail-label">Visit Type</span>
-                                        <span className="detail-value">{formData.visitType}</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div className="detail-section">
-                                <h3><FaHeartbeat /> Medical Information</h3>
-                                <div className="detail-grid">
-                                    <div className="detail-item">
-                                        <span className="detail-label">Known Allergies</span>
-                                        <span className="detail-value">{formData.knownAllergies}</span>
-                                    </div>
-                                    {formData.knownAllergies === 'Yes' && formData.allergiesDetails && (
-                                        <div className="detail-item full-width">
-                                            <span className="detail-label">Allergy Details</span>
-                                            <span className="detail-value">{formData.allergiesDetails}</span>
-                                        </div>
-                                    )}
-                                    {formData.reasonForVisit && (
-                                        <div className="detail-item full-width">
-                                            <span className="detail-label">Reason for Visit</span>
-                                            <span className="detail-value">{formData.reasonForVisit}</span>
-                                        </div>
-                                    )}
-                                    {formData.primaryConcern && (
-                                        <div className="detail-item full-width">
-                                            <span className="detail-label">Primary Concern</span>
-                                            <span className="detail-value">{formData.primaryConcern}</span>
-                                        </div>
-                                    )}
-                                    {formData.existingConditions && (
-                                        <div className="detail-item full-width">
-                                            <span className="detail-label">Existing Conditions</span>
-                                            <span className="detail-value">{formData.existingConditions}</span>
-                                        </div>
-                                    )}
-                                </div>
-                            </div>
-
-                            {(formData.address || formData.emergencyContactName) && (
-                                <div className="detail-section">
-                                    <h3><FaMapMarkerAlt /> Additional Information</h3>
-                                    <div className="detail-grid">
-                                        {formData.address && (
-                                            <div className="detail-item full-width">
-                                                <span className="detail-label">Address</span>
-                                                <span className="detail-value">{formData.address}</span>
-                                            </div>
-                                        )}
-                                        {formData.emergencyContactName && (
-                                            <div className="detail-item">
-                                                <span className="detail-label">Emergency Contact</span>
-                                                <span className="detail-value">{formData.emergencyContactName}</span>
-                                            </div>
-                                        )}
-                                        {formData.emergencyContactNumber && (
-                                            <div className="detail-item">
-                                                <span className="detail-label">Contact Number</span>
-                                                <span className="detail-value">{formData.emergencyContactNumber}</span>
-                                            </div>
-                                        )}
-                                    </div>
-                                </div>
-                            )}
-                        </div>
-
-                        <div className="confirmation-note">
-                            <p><strong>Important:</strong> Please arrive 15 minutes before your scheduled time and bring a valid ID.</p>
-                        </div>
-
-                        <div className="confirmation-actions">
-                            <Link to="/" className="btn btn-primary">
-                                Back to Home
-                            </Link>
-                            <Link to="/book-appointment" className="btn btn-outline">
-                                Book Another Appointment
-                            </Link>
-                        </div>
-                    </div>
-                </div>
+      <section className="section-padding bg-gray-50">
+        <div className="container-custom max-w-3xl">
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4 }}
+            className="bg-white rounded-2xl border border-gray-100 shadow-card overflow-hidden"
+          >
+            {/* Success header */}
+            <div className="bg-gradient-to-r from-secondary-500 to-emerald-500 px-6 py-10 text-center text-white">
+              <motion.div
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ delay: 0.2, type: 'spring', stiffness: 200 }}
+                className="w-20 h-20 mx-auto rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center mb-4"
+              >
+                <CheckCircle2 size={44} />
+              </motion.div>
+              <h1 className="text-2xl md:text-3xl font-heading font-bold">Appointment Booked Successfully!</h1>
+              <p className="text-white/80 mt-2 text-sm">Your appointment details are shown below.</p>
             </div>
-        </div>
-    );
-};
 
-export default AppointmentConfirmation;
+            <div className="p-6 md:p-8 space-y-6">
+              {/* ID Badges */}
+              <div className="grid sm:grid-cols-2 gap-4">
+                <div className="bg-primary-50 rounded-xl p-4 text-center border border-primary-100">
+                  <span className="text-xs font-medium text-primary-500 uppercase tracking-wide">Appointment ID</span>
+                  <p className="text-lg font-heading font-bold text-primary-700 mt-0.5">{appointment.appointmentId}</p>
+                </div>
+                <div className="bg-secondary-50 rounded-xl p-4 text-center border border-secondary-100">
+                  <span className="text-xs font-medium text-secondary-500 uppercase tracking-wide">Patient ID</span>
+                  <p className="text-lg font-heading font-bold text-secondary-700 mt-0.5">{appointment.patientId}</p>
+                </div>
+              </div>
+
+              {/* Detail sections */}
+              <DetailSection title="Personal Details" icon={User}>
+                <DetailItem label="Patient's Name" value={formData.patientName} />
+                <DetailItem label="Gender" value={formData.gender} />
+                <DetailItem
+                  label={formData.useAge ? 'Age' : 'Date of Birth'}
+                  value={formData.useAge ? `${formData.ageYears} years${formData.ageMonths ? ` ${formData.ageMonths} months` : ''}` : formData.dateOfBirth}
+                />
+                <DetailItem label="Mobile Number" value={formData.mobileNumber} />
+                <DetailItem label="Email Address" value={formData.emailAddress} />
+              </DetailSection>
+
+              <DetailSection title="Appointment Details" icon={Calendar}>
+                {formData.department && <DetailItem label="Department" value={formData.department} />}
+                <DetailItem label="Date" value={formData.appointmentDate && new Date(formData.appointmentDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })} />
+                <DetailItem label="Time" value={formData.appointmentTime} />
+                <DetailItem label="Visit Type" value={formData.visitType} />
+              </DetailSection>
+
+              <DetailSection title="Medical Information" icon={HeartPulse}>
+                <DetailItem label="Known Allergies" value={formData.knownAllergies} />
+                {formData.knownAllergies === 'Yes' && formData.allergiesDetails && (
+                  <DetailItem label="Allergy Details" value={formData.allergiesDetails} full />
+                )}
+                {formData.reasonForVisit && <DetailItem label="Reason for Visit" value={formData.reasonForVisit} full />}
+                {formData.primaryConcern && <DetailItem label="Primary Concern" value={formData.primaryConcern} full />}
+                {formData.existingConditions && <DetailItem label="Existing Conditions" value={formData.existingConditions} full />}
+              </DetailSection>
+
+              {(formData.address || formData.emergencyContactName) && (
+                <DetailSection title="Additional Information" icon={MapPin}>
+                  {formData.address && <DetailItem label="Address" value={formData.address} full />}
+                  {formData.emergencyContactName && <DetailItem label="Emergency Contact" value={formData.emergencyContactName} />}
+                  {formData.emergencyContactNumber && <DetailItem label="Contact Number" value={formData.emergencyContactNumber} />}
+                </DetailSection>
+              )}
+
+              {/* Note */}
+              <div className="bg-amber-50 rounded-xl p-4 border border-amber-100">
+                <p className="text-sm text-amber-800">
+                  <strong>Important:</strong> Please arrive 15 minutes before your scheduled time and bring a valid photo ID.
+                </p>
+              </div>
+
+              {/* Actions */}
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-2">
+                <Button as={Link} to="/" iconLeft={Home} className="flex-1 justify-center">
+                  Back to Home
+                </Button>
+                <Button as={Link} to="/book-appointment" variant="outline" iconLeft={CalendarPlus} className="flex-1 justify-center">
+                  Book Another
+                </Button>
+                {appointment.appointmentId && (
+                  <Button
+                    as="a"
+                    href={appointmentAPI.downloadPDF(appointment._id || appointment.appointmentId)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    variant="ghost"
+                    iconLeft={Download}
+                    className="flex-1 justify-center"
+                  >
+                    Download PDF
+                  </Button>
+                )}
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+    </>
+  );
+}
+
+/* ── Sub-components ──────────────────────────── */
+function DetailSection({ title, icon: Icon, children }) {
+  return (
+    <div className="bg-gray-50 rounded-xl p-5 border border-gray-100">
+      <h3 className="font-heading font-bold text-dark-800 mb-3 flex items-center gap-2 text-sm">
+        <Icon size={16} className="text-primary-600" /> {title}
+      </h3>
+      <div className="grid sm:grid-cols-2 gap-x-6 gap-y-2">{children}</div>
+    </div>
+  );
+}
+
+function DetailItem({ label, value, full }) {
+  if (!value) return null;
+  return (
+    <div className={cn('py-1', full && 'sm:col-span-2')}>
+      <span className="text-xs text-dark-400 block">{label}</span>
+      <span className="text-sm text-dark-800 font-medium">{value}</span>
+    </div>
+  );
+}

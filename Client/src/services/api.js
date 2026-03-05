@@ -63,6 +63,65 @@ export const templateAPI = {
     preview: (data) => api.post('/appointment-templates/preview', data),
 };
 
+// ──────────────────────────────────────────────
+// Doctor APIs (Public)
+// ──────────────────────────────────────────────
+export const doctorAPI = {
+  getAll: (params = {}) => {
+    const query = new URLSearchParams(params).toString();
+    return api.get(`/doctors${query ? `?${query}` : ''}`);
+  },
+  getById: (id) => api.get(`/doctors/${id}`),
+};
+
+// ──────────────────────────────────────────────
+// Service APIs (Public)
+// ──────────────────────────────────────────────
+export const serviceAPI = {
+  getAll: (params = {}) => {
+    const query = new URLSearchParams(params).toString();
+    return api.get(`/services${query ? `?${query}` : ''}`);
+  },
+  getById: (id) => api.get(`/services/${id}`),
+};
+
+// ──────────────────────────────────────────────
+// Department APIs (Public)
+// ──────────────────────────────────────────────
+export const departmentAPI = {
+  getAll: () => api.get('/departments'),
+  getById: (id) => api.get(`/departments/${id}`),
+};
+
+// ──────────────────────────────────────────────
+// Announcement APIs (Public)
+// ──────────────────────────────────────────────
+export const announcementAPI = {
+  getAll: (params = {}) => {
+    const query = new URLSearchParams(params).toString();
+    return api.get(`/announcements${query ? `?${query}` : ''}`);
+  },
+  getActive: () => api.get('/announcements/active'),
+};
+
+// ──────────────────────────────────────────────
+// Site Update APIs (Public)
+// ──────────────────────────────────────────────
+export const siteUpdateAPI = {
+  getAll: (params = {}) => {
+    const query = new URLSearchParams(params).toString();
+    return api.get(`/site-updates${query ? `?${query}` : ''}`);
+  },
+  getActive: () => api.get('/site-updates/active'),
+};
+
+// ──────────────────────────────────────────────
+// Support / Contact Form API (Public)
+// ──────────────────────────────────────────────
+export const supportAPI = {
+  create: (data) => api.post('/support', data),
+};
+
 // Verify CAPTCHA
 export const verifyCaptcha = (token) => api.post('/verify-captcha', { token });
 

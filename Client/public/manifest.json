@@ -1,0 +1,55 @@
+{
+  "name": "Lifebridge Medical Center",
+  "short_name": "Lifebridge",
+  "description": "Award-winning healthcare with 500+ expert doctors, 30+ departments, and 24/7 emergency care in New Delhi, India.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#ffffff",
+  "theme_color": "#7C3AED",
+  "lang": "en",
+  "dir": "ltr",
+  "categories": ["health", "medical", "lifestyle"],
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [],
+  "shortcuts": [
+    {
+      "name": "Book Appointment",
+      "short_name": "Appointment",
+      "url": "/book-appointment",
+      "description": "Book a doctor appointment online"
+    },
+    {
+      "name": "Emergency",
+      "short_name": "Emergency",
+      "url": "/emergency",
+      "description": "24/7 Emergency services information"
+    },
+    {
+      "name": "Find a Doctor",
+      "short_name": "Doctors",
+      "url": "/doctors",
+      "description": "Browse our 500+ expert doctors"
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+# ai.txt — Lifebridge Medical Center
+# https://hms.gu-saurabh.site/
+# This file provides guidance for AI agents and crawlers.
+
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /appointment-confirmation
+
+# Site Information
+Site-name: Lifebridge Medical Center
+Site-description: Premier multi-specialty hospital in New Delhi offering 15+ departments, AI-powered symptom checker, online appointment booking, 24/7 emergency services, and comprehensive healthcare solutions.
+Site-url: https://hms.gu-saurabh.site/
+Site-type: Healthcare / Hospital / Medical Organization
+Site-language: en
+Site-region: IN
+
+# Content Categories
+Topics: Healthcare, Hospital, Medical Services, Cardiology, Neurology, Orthopedics, Pediatrics, Oncology, Dermatology, Emergency Medicine, Health Blog, Patient Services, Online Appointments, AI Health Tools
+
+# Structured Data
+Schema-types: Hospital, MedicalOrganization, WebSite, MedicalClinic, Physician
+
+# Contact
+Contact-email: info@lifebridgemedical.com
+Contact-phone: +91-9876543210
+Emergency-phone: 108
+
+# References
+Sitemap: https://hms.gu-saurabh.site/sitemap.xml
+Robots: https://hms.gu-saurabh.site/robots.txt
+Humans: https://hms.gu-saurabh.site/humans.txt
+Security: https://hms.gu-saurabh.site/.well-known/security.txt

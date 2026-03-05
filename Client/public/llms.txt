@@ -1,0 +1,77 @@
+# Lifebridge Medical Center — llms.txt
+# AI/LLM Crawler Information
+# Last updated: 2025-01-15
+
+## Site Overview
+Lifebridge Medical Center is a premier multi-specialty hospital located in New Delhi, India.
+Website: https://hms.gu-saurabh.site/
+Type: Hospital / Healthcare Provider / Medical Organization
+
+## Key Information
+- Name: Lifebridge Medical Center
+- Tagline: Your Health, Our Priority
+- Location: 123 Healthcare Avenue, Medical District, New Delhi 110001, India
+- Phone: +91-9876543210
+- Emergency: 108
+- Email: info@lifebridgemedical.com
+
+## Services & Departments
+- Cardiology (Heart & Cardiovascular Care)
+- Neurology (Brain & Nervous System)
+- Orthopedics (Bone & Joint Care)
+- Pediatrics (Child Healthcare)
+- Oncology (Cancer Treatment)
+- Dermatology (Skin Care)
+- Gynecology (Women's Health)
+- Ophthalmology (Eye Care)
+- ENT (Ear, Nose & Throat)
+- Pulmonology (Lung & Respiratory)
+- Gastroenterology (Digestive Health)
+- Urology (Urinary System)
+- General Medicine
+- Emergency Medicine (24/7 ER)
+- Radiology & Diagnostics
+
+## Pages Available
+- Home: https://hms.gu-saurabh.site/
+- About Us: https://hms.gu-saurabh.site/about
+- Departments: https://hms.gu-saurabh.site/departments
+- Doctors: https://hms.gu-saurabh.site/doctors
+- Services & Treatments: https://hms.gu-saurabh.site/services
+- Patient Services: https://hms.gu-saurabh.site/patient-services
+- Book Appointment: https://hms.gu-saurabh.site/book-appointment
+- Blog & Health Articles: https://hms.gu-saurabh.site/blog
+- Announcements: https://hms.gu-saurabh.site/announcements
+- Contact Us: https://hms.gu-saurabh.site/contact
+- Emergency: https://hms.gu-saurabh.site/emergency
+- FAQs: https://hms.gu-saurabh.site/faqs
+- Symptom Checker (AI): https://hms.gu-saurabh.site/symptom-checker
+- Privacy Policy: https://hms.gu-saurabh.site/privacy
+- Terms of Service: https://hms.gu-saurabh.site/terms
+
+## Features
+- AI-powered Symptom Checker
+- AI Chat Support Widget
+- Online Appointment Booking
+- 24/7 Emergency Services
+- Patient Portal
+- Health Blog & Resources
+- Interactive Department Finder
+- Doctor Directory with Filtering
+
+## Technical Stack
+- Frontend: React 18, Vite 5, Tailwind CSS 3, Framer Motion
+- UI: Headless UI, Lucide React Icons
+- Hosting: Vercel
+- Domain: hms.gu-saurabh.site
+
+## Contact for AI/Bot Inquiries
+- Developer: Saurabh
+- Portfolio: https://gu-saurabh.site
+- Email: info@lifebridgemedical.com
+
+## Crawling Guidance
+- Respect robots.txt directives
+- Sitemap: https://hms.gu-saurabh.site/sitemap.xml
+- This is a Single Page Application (SPA) — content is rendered client-side
+- API endpoints (/api/*) should not be crawled

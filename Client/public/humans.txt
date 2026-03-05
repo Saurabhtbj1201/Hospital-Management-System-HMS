@@ -1,0 +1,29 @@
+/* TEAM */
+
+Name: Saurabh Kumar
+Role: Full-Stack Developer
+Site: https://gu-saurabh.site
+From: India
+
+/* SITE */
+
+Name: Lifebridge Medical Center
+URL: https://hms.gu-saurabh.site
+Description: Professional hospital management public website
+Last Updated: 2026-03-05
+
+/* TECHNOLOGY */
+
+Framework: React 18
+Build Tool: Vite 5
+Styling: Tailwind CSS 3
+Animation: Framer Motion
+Icons: Lucide React
+UI: Headless UI
+Language: JavaScript (ES2022+)
+Hosting: Vercel
+
+/* FONTS */
+
+Inter — Google Fonts — https://fonts.google.com/specimen/Inter
+Poppins — Google Fonts — https://fonts.google.com/specimen/Poppins
